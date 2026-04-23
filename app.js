@@ -220,7 +220,7 @@ function saveQ1AndContinue() {
         const input = document.createElement('input');
         input.type = 'text';
         input.name = 'q2[]';
-        input.placeholder = 'Wat had je kunnen doen?';
+        input.placeholder = 'Hoe zou jij dit vermijden?';
         input.required = true;
         
         block.appendChild(label);
