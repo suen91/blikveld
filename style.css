@@ -192,7 +192,8 @@ h1 {
     color: var(--text-color);
 }
 
-.input-group input[type="text"] {
+.input-group input[type="text"],
+.q2-answer-block input[type="text"] {
     background-color: var(--surface-color);
     border: 1px solid rgba(255,255,255,0.1);
     border-radius: 12px;
@@ -205,7 +206,8 @@ h1 {
     width: 100%;
 }
 
-.input-group input[type="text"]:focus {
+.input-group input[type="text"]:focus,
+.q2-answer-block input[type="text"]:focus {
     outline: none;
     border-color: var(--primary-color);
     box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
