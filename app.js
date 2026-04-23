@@ -84,7 +84,12 @@ function setupEventListeners() {
 
     UI.manualPlayBtn.addEventListener('click', () => {
         UI.videoPlayOverlay.classList.add('hidden');
-        UI.videoPlayer.play().catch(e => console.log("Manual play failed", e));
+        UI.videoPlayer.muted = true; // Force muted to bypass Safari restrictions
+        UI.videoPlayer.play().catch(e => {
+            console.log("Manual play failed", e);
+            alert("Video kon niet afspelen: " + e.message);
+            UI.videoPlayOverlay.classList.remove('hidden');
+        });
     });
 
     // Form Q1 Submit
@@ -176,6 +181,7 @@ function startPhaseA() {
     const situation = APP_STATE.situations[APP_STATE.currentIndex];
     UI.videoPlayer.src = situation.videoA;
     UI.videoPlayer.load();
+    UI.videoPlayer.muted = true;
     
     let playPromise = UI.videoPlayer.play();
     if (playPromise !== undefined) {
@@ -286,6 +292,7 @@ function startPhaseB() {
     const situation = APP_STATE.situations[APP_STATE.currentIndex];
     UI.videoPlayer.src = situation.videoB;
     UI.videoPlayer.load();
+    UI.videoPlayer.muted = true;
     
     let playPromise = UI.videoPlayer.play();
     if (playPromise !== undefined) {
