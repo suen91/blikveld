@@ -28,8 +28,7 @@ const UI = {
     
     inputQ2Phase: document.getElementById('input-q2-phase'),
     formQ2: document.getElementById('form-q2'),
-    q2InputsContainer: document.getElementById('q2-inputs-container'),
-    addQ2Btn: document.getElementById('add-q2-btn'),
+    q2DynamicList: document.getElementById('q2-dynamic-list'),
     
     completedPhase: document.getElementById('completed-phase')
 };
@@ -93,7 +92,6 @@ function setupEventListeners() {
 
     // Add more inputs logic
     UI.addQ1Btn.addEventListener('click', () => addDynamicInput(UI.q1InputsContainer, 'q1[]', 'Nog een mogelijkheid...'));
-    UI.addQ2Btn.addEventListener('click', () => addDynamicInput(UI.q2InputsContainer, 'q2[]', 'Nog een mogelijkheid...'));
 }
 
 function addDynamicInput(container, name, placeholder) {
@@ -181,7 +179,7 @@ function transitionToInputQ1Phase() {
     UI.formQ1.reset();
     UI.formQ2.reset();
     UI.q1InputsContainer.innerHTML = '<input type="text" name="q1[]" placeholder="Mogelijkheid 1..." required>';
-    UI.q2InputsContainer.innerHTML = '<input type="text" name="q2[]" placeholder="Bijv. remmen..." required>';
+    UI.q2DynamicList.innerHTML = '';
     
     checkOrientation();
 }
@@ -191,6 +189,32 @@ function saveQ1AndContinue() {
     const inputs = UI.q1InputsContainer.querySelectorAll('input[type="text"]');
     APP_STATE.currentAnswersQ1 = Array.from(inputs).map(i => i.value).filter(val => val.trim() !== '');
     
+    // Build Q2 inputs based on Q1 answers
+    UI.q2DynamicList.innerHTML = '';
+    
+    if (APP_STATE.currentAnswersQ1.length === 0) {
+        APP_STATE.currentAnswersQ1.push("Ik weet het niet");
+    }
+    
+    APP_STATE.currentAnswersQ1.forEach((answer, index) => {
+        const block = document.createElement('div');
+        block.className = 'q2-answer-block';
+        
+        const label = document.createElement('label');
+        label.className = 'q1-reference-text';
+        label.innerText = `Bij: "${answer}"`;
+        
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.name = 'q2[]';
+        input.placeholder = 'Wat had je kunnen doen?';
+        input.required = true;
+        
+        block.appendChild(label);
+        block.appendChild(input);
+        UI.q2DynamicList.appendChild(block);
+    });
+    
     APP_STATE.phase = 'INPUT_Q2';
     hideAllPhases();
     UI.inputQ2Phase.classList.remove('hidden');
@@ -199,7 +223,7 @@ function saveQ1AndContinue() {
 
 function saveQ2AndContinue() {
     // Collect all Q2 inputs
-    const inputs = UI.q2InputsContainer.querySelectorAll('input[type="text"]');
+    const inputs = UI.q2DynamicList.querySelectorAll('input[type="text"]');
     APP_STATE.currentAnswersQ2 = Array.from(inputs).map(i => i.value).filter(val => val.trim() !== '');
     
     const situation = APP_STATE.situations[APP_STATE.currentIndex];

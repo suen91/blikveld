@@ -216,6 +216,23 @@ h1 {
     flex-direction: column;
 }
 
+.q2-answer-block {
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    background-color: rgba(255, 255, 255, 0.03);
+    border-radius: 12px;
+    border-left: 3px solid var(--primary-color);
+}
+
+.q1-reference-text {
+    display: block;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    margin-bottom: 0.8rem;
+    font-style: italic;
+}
+
 /* Forms & Buttons */
 .reflection-form {
     display: flex;

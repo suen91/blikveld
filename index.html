@@ -92,12 +92,8 @@
                 <p class="subtitle">Wat had je kunnen doen?</p>
 
                 <form id="form-q2" class="reflection-form">
-                    <div class="input-group">
-                        <label>Wat kun je doen om dit te vermijden?</label>
-                        <div id="q2-inputs-container" class="dynamic-inputs">
-                            <input type="text" name="q2[]" placeholder="Bijv. remmen..." required>
-                        </div>
-                        <button type="button" id="add-q2-btn" class="btn secondary-btn add-btn">+ Voeg nog een mogelijkheid toe</button>
+                    <div id="q2-dynamic-list">
+                        <!-- Q2 inputs will be injected here based on Q1 answers -->
                     </div>
 
                     <button type="submit" class="btn submit-btn mt-auto">Bekijk de afloop</button>
