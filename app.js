@@ -18,6 +18,8 @@ const UI = {
     videoPhase: document.getElementById('video-phase'),
     videoPlayer: document.getElementById('main-video'),
     videoControls: document.getElementById('video-controls'),
+    videoPlayOverlay: document.getElementById('video-play-overlay'),
+    manualPlayBtn: document.getElementById('manual-play-btn'),
     nextPhaseBtn: document.getElementById('next-phase-btn'),
     startBtn: document.getElementById('start-btn'),
     
@@ -80,6 +82,11 @@ function setupEventListeners() {
         UI.videoControls.classList.remove('hidden');
     });
 
+    UI.manualPlayBtn.addEventListener('click', () => {
+        UI.videoPlayOverlay.classList.add('hidden');
+        UI.videoPlayer.play().catch(e => console.log("Manual play failed", e));
+    });
+
     // Form Q1 Submit
     UI.formQ1.addEventListener('submit', (e) => {
         e.preventDefault();
@@ -118,10 +125,17 @@ function checkOrientation() {
         if (isPortrait) {
             showRotationOverlay("Draai naar Landscape", "De video wordt horizontaal afgespeeld.");
             UI.videoPlayer.pause();
+            UI.videoPlayOverlay.classList.add('hidden');
         } else {
             hideRotationOverlay();
             if (!UI.videoPlayer.ended) {
-                 UI.videoPlayer.play().catch(e => console.log("Play failed on rotate", e));
+                 let playPromise = UI.videoPlayer.play();
+                 if (playPromise !== undefined) {
+                     playPromise.catch(e => {
+                         console.log("Play failed on rotate, showing manual play button", e);
+                         UI.videoPlayOverlay.classList.remove('hidden');
+                     });
+                 }
             }
         }
     } else if (APP_STATE.phase === 'INPUT_Q1' || APP_STATE.phase === 'INPUT_Q2' || APP_STATE.phase === 'ONBOARDING') {

@@ -70,6 +70,10 @@ h1 {
     z-index: 50; /* Above normal phases but below overlays */
 }
 .splash-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
     animation: pulse 2s infinite ease-in-out;
 }
 .splash-logo {
