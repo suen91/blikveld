@@ -29,14 +29,13 @@ const UI = {
 // Initialize App
 async function init() {
     try {
-        const response = await fetch('config.json');
-        const data = await response.json();
-        APP_STATE.situations = data.situations;
+        APP_STATE.situations = CONFIG.situations;
         
+        UI.videoPhase.classList.remove('hidden'); // Show initial screen with start button
         setupEventListeners();
         checkOrientation(); // Initial check
     } catch (e) {
-        console.error("Failed to load config.json", e);
+        console.error("Failed to load config", e);
         alert("Configuratie kon niet worden geladen.");
     }
 }
