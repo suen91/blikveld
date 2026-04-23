@@ -23,11 +23,13 @@ const UI = {
     
     inputQ1Phase: document.getElementById('input-q1-phase'),
     formQ1: document.getElementById('form-q1'),
+    q1SituationImg: document.getElementById('q1-situation-img'),
     q1InputsContainer: document.getElementById('q1-inputs-container'),
     addQ1Btn: document.getElementById('add-q1-btn'),
     
     inputQ2Phase: document.getElementById('input-q2-phase'),
     formQ2: document.getElementById('form-q2'),
+    q2SituationImg: document.getElementById('q2-situation-img'),
     q2DynamicList: document.getElementById('q2-dynamic-list'),
     
     completedPhase: document.getElementById('completed-phase')
@@ -172,6 +174,17 @@ function transitionToInputQ1Phase() {
     APP_STATE.phase = 'INPUT_Q1';
     hideAllPhases();
     UI.inputQ1Phase.classList.remove('hidden');
+    
+    const situation = APP_STATE.situations[APP_STATE.currentIndex];
+    if (situation.image) {
+        UI.q1SituationImg.src = situation.image;
+        UI.q1SituationImg.classList.remove('hidden');
+        UI.q2SituationImg.src = situation.image;
+        UI.q2SituationImg.classList.remove('hidden');
+    } else {
+        UI.q1SituationImg.classList.add('hidden');
+        UI.q2SituationImg.classList.add('hidden');
+    }
     
     updateSituationIndicators();
     

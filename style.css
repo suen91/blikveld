@@ -172,6 +172,19 @@ h1 {
     color: var(--primary-color);
 }
 
+.situation-image {
+    width: 100%;
+    max-height: 200px;
+    object-fit: cover;
+    border-radius: 12px;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.situation-image.hidden {
+    display: none;
+}
+
 .form-container {
     flex: 1;
     display: flex;
