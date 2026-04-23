@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Blikveld Gevaarherkenning</title>
+    <meta name="description" content="Interactieve gevaarherkenningstraining voor mobiel gebruik.">
+    <link rel="stylesheet" href="style.css">
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <!-- Overlay for forcing rotation -->
+    <div id="orientation-overlay" class="overlay hidden">
+        <div class="overlay-content">
+            <div class="rotate-icon">🔄</div>
+            <h2 id="rotate-message">Draai je telefoon</h2>
+            <p id="rotate-submessage">Deze stap vereist een andere schermstand.</p>
+        </div>
+    </div>
+
+    <!-- Main App Container -->
+    <main id="app-container">
+        
+        <!-- Phase A & B: Video Player (Landscape) -->
+        <section id="video-phase" class="phase hidden">
+            <video id="main-video" playsinline preload="auto"></video>
+            
+            <!-- Custom controls for play/pause if needed, or overlay -->
+            <div id="video-overlay" class="overlay">
+                <button id="start-btn" class="btn primary-btn">Start Training</button>
+            </div>
+            <div id="video-controls" class="hidden">
+                 <button id="next-phase-btn" class="btn primary-btn">Ga verder</button>
+            </div>
+        </section>
+
+        <!-- Phase Input: Form (Portrait) -->
+        <section id="input-phase" class="phase hidden">
+            <header class="app-header">
+                <img src="brand assets/Blikveld_logo_digitaal.png" alt="Blikveld Logo" class="logo">
+                <div class="progress-indicator">Situatie <span id="current-sit-num">1</span>/4</div>
+            </header>
+
+            <div class="form-container">
+                <h1>Wat zag je zojuist?</h1>
+                <p class="subtitle">Denk goed na over de situatie.</p>
+
+                <form id="reflection-form">
+                    <div class="input-group">
+                        <label for="q1">Wat denk je dat er gebeurt?</label>
+                        <textarea id="q1" name="q1" rows="3" placeholder="Typ hier je antwoord..." required></textarea>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="q2">Wat kun je doen om dit te vermijden?</label>
+                        <textarea id="q2" name="q2" rows="3" placeholder="Bijv. remmen, uitwijken..." required></textarea>
+                    </div>
+
+                    <button type="submit" class="btn submit-btn">Bekijk de afloop</button>
+                </form>
+            </div>
+        </section>
+        
+        <!-- Completed State -->
+        <section id="completed-phase" class="phase hidden">
+            <div class="completed-content">
+                <img src="brand assets/Blikveld_logo_digitaal.png" alt="Blikveld Logo" class="logo-large">
+                <h1>Training Voltooid!</h1>
+                <p>Je hebt alle 4 de situaties afgerond. Goed gedaan!</p>
+                <button onclick="location.reload()" class="btn primary-btn">Opnieuw Starten</button>
+            </div>
+        </section>
+
+    </main>
+
+    <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,243 @@
+:root {
+    --bg-color: #0f172a;
+    --surface-color: #1e293b;
+    --primary-color: #3b82f6;
+    --primary-hover: #2563eb;
+    --text-color: #f8fafc;
+    --text-muted: #cbd5e1;
+    --accent-color: #f43f5e;
+    --font-family: 'Inter', sans-serif;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: var(--font-family);
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    overflow: hidden; /* Prevent scrolling on body, handle within containers */
+    height: 100vh;
+    width: 100vw;
+}
+
+/* Typography */
+h1 {
+    font-size: 1.5rem;
+    font-weight: 800;
+    margin-bottom: 0.5rem;
+    color: var(--text-color);
+}
+.subtitle {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    margin-bottom: 2rem;
+}
+
+/* Layout */
+#app-container {
+    height: 100%;
+    width: 100%;
+    position: relative;
+}
+
+.phase {
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 1;
+    transition: opacity 0.4s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+.phase.hidden {
+    opacity: 0;
+    pointer-events: none;
+    z-index: -1;
+}
+
+/* Video Phase */
+#video-phase {
+    background-color: #000;
+    justify-content: center;
+    align-items: center;
+}
+#main-video {
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /* ensures full 16:9 view without crop */
+}
+#video-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
+}
+#video-overlay.hidden {
+    display: none;
+}
+#video-controls {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    z-index: 10;
+}
+
+/* Input Phase (Portrait) */
+#input-phase {
+    background-color: var(--bg-color);
+    overflow-y: auto; /* Allow scrolling within the form if needed */
+    padding: 1rem;
+}
+
+.app-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.logo {
+    height: 24px;
+    object-fit: contain;
+}
+
+.progress-indicator {
+    font-size: 0.85rem;
+    font-weight: 600;
+    background: var(--surface-color);
+    padding: 0.3rem 0.8rem;
+    border-radius: 20px;
+    color: var(--primary-color);
+}
+
+.form-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 2rem;
+}
+
+.input-group {
+    margin-bottom: 1.5rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.input-group label {
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: var(--text-color);
+}
+
+.input-group textarea {
+    background-color: var(--surface-color);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 12px;
+    padding: 1rem;
+    color: var(--text-color);
+    font-family: var(--font-family);
+    font-size: 1rem;
+    resize: none;
+    transition: border-color 0.2s;
+}
+
+.input-group textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+}
+
+/* Push submit button to the bottom so it's not hidden by keyboard */
+#reflection-form {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+.submit-btn {
+    margin-top: auto;
+}
+
+/* Buttons */
+.btn {
+    padding: 1rem 2rem;
+    border: none;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s, background-color 0.2s;
+    font-family: var(--font-family);
+}
+.btn:active {
+    transform: scale(0.98);
+}
+.primary-btn, .submit-btn {
+    background-color: var(--primary-color);
+    color: white;
+    width: 100%;
+    box-shadow: 0 4px 14px 0 rgba(59, 130, 246, 0.39);
+}
+.primary-btn:hover, .submit-btn:hover {
+    background-color: var(--primary-hover);
+}
+
+/* Overlay */
+.overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.95);
+    backdrop-filter: blur(8px);
+    z-index: 100;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    flex-direction: column;
+}
+.overlay.hidden {
+    display: none;
+}
+.rotate-icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    animation: rotateAnim 2s infinite ease-in-out;
+}
+
+@keyframes rotateAnim {
+    0% { transform: rotate(0deg); }
+    50% { transform: rotate(90deg); }
+    100% { transform: rotate(0deg); }
+}
+
+/* Completed Phase */
+#completed-phase {
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 2rem;
+}
+.logo-large {
+    height: 60px;
+    margin-bottom: 2rem;
+}
+#completed-phase h1 {
+    font-size: 2rem;
+    color: var(--primary-color);
+}
+#completed-phase p {
+    margin-bottom: 2rem;
+    color: var(--text-muted);
+}
