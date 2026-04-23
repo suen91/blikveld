@@ -120,8 +120,8 @@ function checkOrientation() {
             UI.videoPlayer.pause();
         } else {
             hideRotationOverlay();
-            if (!UI.videoPlayer.paused && !UI.videoPlayer.ended) {
-                 UI.videoPlayer.play();
+            if (!UI.videoPlayer.ended) {
+                 UI.videoPlayer.play().catch(e => console.log("Play failed on rotate", e));
             }
         }
     } else if (APP_STATE.phase === 'INPUT_Q1' || APP_STATE.phase === 'INPUT_Q2' || APP_STATE.phase === 'ONBOARDING') {
@@ -163,10 +163,16 @@ function startPhaseA() {
     UI.videoPlayer.src = situation.videoA;
     UI.videoPlayer.load();
     
-    const isPortrait = window.matchMedia("(orientation: portrait)").matches;
-    if (!isPortrait) {
-        UI.videoPlayer.play().catch(e => console.log("Autoplay prevented", e));
+    let playPromise = UI.videoPlayer.play();
+    if (playPromise !== undefined) {
+        playPromise.then(() => {
+            const isPortrait = window.matchMedia("(orientation: portrait)").matches;
+            if (isPortrait) {
+                UI.videoPlayer.pause();
+            }
+        }).catch(e => console.log("Autoplay prevented", e));
     }
+    
     checkOrientation();
 }
 
@@ -267,10 +273,16 @@ function startPhaseB() {
     UI.videoPlayer.src = situation.videoB;
     UI.videoPlayer.load();
     
-    const isPortrait = window.matchMedia("(orientation: portrait)").matches;
-    if (!isPortrait) {
-        UI.videoPlayer.play().catch(e => console.log("Autoplay prevented", e));
+    let playPromise = UI.videoPlayer.play();
+    if (playPromise !== undefined) {
+        playPromise.then(() => {
+            const isPortrait = window.matchMedia("(orientation: portrait)").matches;
+            if (isPortrait) {
+                UI.videoPlayer.pause();
+            }
+        }).catch(e => console.log("Autoplay prevented", e));
     }
+    
     checkOrientation();
 }
 
