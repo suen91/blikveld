@@ -1,8 +1,10 @@
 const APP_STATE = {
     situations: [],
     currentIndex: 0,
-    phase: 'START', // 'START', 'A', 'INPUT', 'B', 'COMPLETED'
-    sessionId: 'session_' + Date.now()
+    phase: 'SPLASH', // 'SPLASH', 'ONBOARDING', 'A', 'INPUT_Q1', 'INPUT_Q2', 'B', 'COMPLETED'
+    sessionId: 'session_' + Date.now(),
+    currentAnswersQ1: [],
+    currentAnswersQ2: []
 };
 
 const UI = {
@@ -10,18 +12,24 @@ const UI = {
     rotateMessage: document.getElementById('rotate-message'),
     rotateSubmessage: document.getElementById('rotate-submessage'),
     
+    splashPhase: document.getElementById('splash-phase'),
+    onboardingPhase: document.getElementById('onboarding-phase'),
+    
     videoPhase: document.getElementById('video-phase'),
     videoPlayer: document.getElementById('main-video'),
-    videoOverlay: document.getElementById('video-overlay'),
-    startBtn: document.getElementById('start-btn'),
     videoControls: document.getElementById('video-controls'),
     nextPhaseBtn: document.getElementById('next-phase-btn'),
+    startBtn: document.getElementById('start-btn'),
     
-    inputPhase: document.getElementById('input-phase'),
-    form: document.getElementById('reflection-form'),
-    sitNumIndicator: document.getElementById('current-sit-num'),
-    q1: document.getElementById('q1'),
-    q2: document.getElementById('q2'),
+    inputQ1Phase: document.getElementById('input-q1-phase'),
+    formQ1: document.getElementById('form-q1'),
+    q1InputsContainer: document.getElementById('q1-inputs-container'),
+    addQ1Btn: document.getElementById('add-q1-btn'),
+    
+    inputQ2Phase: document.getElementById('input-q2-phase'),
+    formQ2: document.getElementById('form-q2'),
+    q2InputsContainer: document.getElementById('q2-inputs-container'),
+    addQ2Btn: document.getElementById('add-q2-btn'),
     
     completedPhase: document.getElementById('completed-phase')
 };
@@ -31,9 +39,18 @@ async function init() {
     try {
         APP_STATE.situations = CONFIG.situations;
         
-        UI.videoPhase.classList.remove('hidden'); // Show initial screen with start button
         setupEventListeners();
         checkOrientation(); // Initial check
+        
+        // Show splash screen for 2 seconds, then onboarding
+        UI.splashPhase.classList.remove('hidden');
+        setTimeout(() => {
+            APP_STATE.phase = 'ONBOARDING';
+            hideAllPhases();
+            UI.onboardingPhase.classList.remove('hidden');
+            checkOrientation();
+        }, 2000);
+
     } catch (e) {
         console.error("Failed to load config", e);
         alert("Configuratie kon niet worden geladen.");
@@ -44,16 +61,15 @@ function setupEventListeners() {
     // Orientation change listener
     window.matchMedia("(orientation: portrait)").addEventListener("change", checkOrientation);
     
-    // UI interactions
+    // Start from onboarding
     UI.startBtn.addEventListener('click', () => {
-        UI.videoOverlay.classList.add('hidden');
         startPhaseA();
     });
     
     UI.nextPhaseBtn.addEventListener('click', () => {
         UI.videoControls.classList.add('hidden');
         if (APP_STATE.phase === 'A') {
-            transitionToInputPhase();
+            transitionToInputQ1Phase();
         } else if (APP_STATE.phase === 'B') {
             nextSituation();
         }
@@ -63,34 +79,59 @@ function setupEventListeners() {
         UI.videoControls.classList.remove('hidden');
     });
 
-    UI.form.addEventListener('submit', (e) => {
+    // Form Q1 Submit
+    UI.formQ1.addEventListener('submit', (e) => {
         e.preventDefault();
-        saveInputAndContinue();
+        saveQ1AndContinue();
     });
+
+    // Form Q2 Submit
+    UI.formQ2.addEventListener('submit', (e) => {
+        e.preventDefault();
+        saveQ2AndContinue();
+    });
+
+    // Add more inputs logic
+    UI.addQ1Btn.addEventListener('click', () => addDynamicInput(UI.q1InputsContainer, 'q1[]', 'Nog een mogelijkheid...'));
+    UI.addQ2Btn.addEventListener('click', () => addDynamicInput(UI.q2InputsContainer, 'q2[]', 'Nog een mogelijkheid...'));
+}
+
+function addDynamicInput(container, name, placeholder) {
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.name = name;
+    input.placeholder = placeholder;
+    input.required = true;
+    container.appendChild(input);
+    input.focus();
+}
+
+function updateSituationIndicators() {
+    const indicators = document.querySelectorAll('.current-sit-num');
+    indicators.forEach(el => el.innerText = (APP_STATE.currentIndex + 1));
 }
 
 function checkOrientation() {
     const isPortrait = window.matchMedia("(orientation: portrait)").matches;
     
-    if (APP_STATE.phase === 'A' || APP_STATE.phase === 'B' || APP_STATE.phase === 'START') {
+    if (APP_STATE.phase === 'A' || APP_STATE.phase === 'B') {
         if (isPortrait) {
             showRotationOverlay("Draai naar Landscape", "De video wordt horizontaal afgespeeld.");
             UI.videoPlayer.pause();
         } else {
             hideRotationOverlay();
-            // Resume if it was playing and not ended
-            if (!UI.videoPlayer.paused && !UI.videoPlayer.ended && APP_STATE.phase !== 'START') {
+            if (!UI.videoPlayer.paused && !UI.videoPlayer.ended) {
                  UI.videoPlayer.play();
             }
         }
-    } else if (APP_STATE.phase === 'INPUT') {
+    } else if (APP_STATE.phase === 'INPUT_Q1' || APP_STATE.phase === 'INPUT_Q2' || APP_STATE.phase === 'ONBOARDING') {
         if (!isPortrait) {
-            showRotationOverlay("Draai naar Portrait", "Hou je telefoon verticaal om te typen.");
+            showRotationOverlay("Draai naar Portrait", "Hou je telefoon verticaal.");
         } else {
             hideRotationOverlay();
         }
     } else {
-        hideRotationOverlay();
+        hideRotationOverlay(); // For splash or completed, any orientation is fine for now
     }
 }
 
@@ -105,8 +146,11 @@ function hideRotationOverlay() {
 }
 
 function hideAllPhases() {
+    UI.splashPhase.classList.add('hidden');
+    UI.onboardingPhase.classList.add('hidden');
     UI.videoPhase.classList.add('hidden');
-    UI.inputPhase.classList.add('hidden');
+    UI.inputQ1Phase.classList.add('hidden');
+    UI.inputQ2Phase.classList.add('hidden');
     UI.completedPhase.classList.add('hidden');
 }
 
@@ -126,33 +170,53 @@ function startPhaseA() {
     checkOrientation();
 }
 
-function transitionToInputPhase() {
-    APP_STATE.phase = 'INPUT';
+function transitionToInputQ1Phase() {
+    APP_STATE.phase = 'INPUT_Q1';
     hideAllPhases();
-    UI.inputPhase.classList.remove('hidden');
+    UI.inputQ1Phase.classList.remove('hidden');
     
-    UI.sitNumIndicator.innerText = (APP_STATE.currentIndex + 1);
-    UI.form.reset();
+    updateSituationIndicators();
+    
+    // Reset forms and dynamic inputs to default 1 input
+    UI.formQ1.reset();
+    UI.formQ2.reset();
+    UI.q1InputsContainer.innerHTML = '<input type="text" name="q1[]" placeholder="Mogelijkheid 1..." required>';
+    UI.q2InputsContainer.innerHTML = '<input type="text" name="q2[]" placeholder="Bijv. remmen..." required>';
+    
     checkOrientation();
 }
 
-function saveInputAndContinue() {
-    const situation = APP_STATE.situations[APP_STATE.currentIndex];
+function saveQ1AndContinue() {
+    // Collect all Q1 inputs
+    const inputs = UI.q1InputsContainer.querySelectorAll('input[type="text"]');
+    APP_STATE.currentAnswersQ1 = Array.from(inputs).map(i => i.value).filter(val => val.trim() !== '');
     
+    APP_STATE.phase = 'INPUT_Q2';
+    hideAllPhases();
+    UI.inputQ2Phase.classList.remove('hidden');
+    checkOrientation();
+}
+
+function saveQ2AndContinue() {
+    // Collect all Q2 inputs
+    const inputs = UI.q2InputsContainer.querySelectorAll('input[type="text"]');
+    APP_STATE.currentAnswersQ2 = Array.from(inputs).map(i => i.value).filter(val => val.trim() !== '');
+    
+    const situation = APP_STATE.situations[APP_STATE.currentIndex];
     const answerData = {
         sessionId: APP_STATE.sessionId,
         situationId: situation.id,
-        q1: UI.q1.value,
-        q2: UI.q2.value,
+        q1_answers: APP_STATE.currentAnswersQ1,
+        q2_answers: APP_STATE.currentAnswersQ2,
         timestamp: new Date().toISOString()
     };
     
-    // Save to LocalStorage (mocking database)
+    // Save to LocalStorage
     const storedAnswers = JSON.parse(localStorage.getItem('blikveld_answers') || '[]');
     storedAnswers.push(answerData);
     localStorage.setItem('blikveld_answers', JSON.stringify(storedAnswers));
     
-    console.log("Saved answer:", answerData);
+    console.log("Saved answers array:", answerData);
     
     startPhaseB();
 }

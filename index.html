@@ -25,42 +25,82 @@
     <!-- Main App Container -->
     <main id="app-container">
         
+        <!-- Splash Screen -->
+        <section id="splash-phase" class="phase">
+            <div class="splash-content">
+                <img src="brand assets/Blikveld_logo_digitaal.png" alt="Blikveld Logo" class="splash-logo">
+            </div>
+        </section>
+
+        <!-- Onboarding Screen (Portrait) -->
+        <section id="onboarding-phase" class="phase hidden">
+            <div class="onboarding-container">
+                <img src="brand assets/Blikveld_logo_digitaal.png" alt="Blikveld Logo" class="logo-large">
+                <h1 class="instruction-title">INSTRUCTIE</h1>
+                <ul class="instruction-list">
+                    <li>Je krijgt vier video's te zien. Iedere video stopt op een kritiek moment.</li>
+                    <li>Na iedere video geef je aan wat je denkt dat er gebeurt. Probeer meerdere voorspellingen in te vullen.</li>
+                    <li>Vervolgens zie je hoe de situatie afloopt en wat je had kunnen doen om dit te vermijden.</li>
+                </ul>
+                <button id="start-btn" class="btn primary-btn mt-auto">Start Training</button>
+            </div>
+        </section>
+
         <!-- Phase A & B: Video Player (Landscape) -->
         <section id="video-phase" class="phase hidden">
             <video id="main-video" playsinline preload="auto"></video>
             
-            <!-- Custom controls for play/pause if needed, or overlay -->
-            <div id="video-overlay" class="overlay">
-                <button id="start-btn" class="btn primary-btn">Start Training</button>
-            </div>
             <div id="video-controls" class="hidden">
                  <button id="next-phase-btn" class="btn primary-btn">Ga verder</button>
             </div>
         </section>
 
-        <!-- Phase Input: Form (Portrait) -->
-        <section id="input-phase" class="phase hidden">
+        <!-- Phase Input Q1: Form (Portrait) -->
+        <section id="input-q1-phase" class="phase hidden">
             <header class="app-header">
                 <img src="brand assets/Blikveld_logo_digitaal.png" alt="Blikveld Logo" class="logo">
-                <div class="progress-indicator">Situatie <span id="current-sit-num">1</span>/4</div>
+                <div class="progress-indicator">Situatie <span class="current-sit-num">1</span>/4</div>
             </header>
 
             <div class="form-container">
                 <h1>Wat zag je zojuist?</h1>
                 <p class="subtitle">Denk goed na over de situatie.</p>
 
-                <form id="reflection-form">
+                <form id="form-q1" class="reflection-form">
                     <div class="input-group">
-                        <label for="q1">Wat denk je dat er gebeurt?</label>
-                        <textarea id="q1" name="q1" rows="3" placeholder="Typ hier je antwoord..." required></textarea>
+                        <label>Wat denk je dat er gebeurt?</label>
+                        <div id="q1-inputs-container" class="dynamic-inputs">
+                            <input type="text" name="q1[]" placeholder="Mogelijkheid 1..." required>
+                        </div>
+                        <button type="button" id="add-q1-btn" class="btn secondary-btn add-btn">+ Voeg nog een mogelijkheid toe</button>
                     </div>
 
+                    <button type="submit" class="btn submit-btn mt-auto">Volgende</button>
+                </form>
+            </div>
+        </section>
+
+        <!-- Phase Input Q2: Form (Portrait) -->
+        <section id="input-q2-phase" class="phase hidden">
+            <header class="app-header">
+                <img src="brand assets/Blikveld_logo_digitaal.png" alt="Blikveld Logo" class="logo">
+                <div class="progress-indicator">Situatie <span class="current-sit-num">1</span>/4</div>
+            </header>
+
+            <div class="form-container">
+                <h1>Wat zag je zojuist?</h1>
+                <p class="subtitle">Wat had je kunnen doen?</p>
+
+                <form id="form-q2" class="reflection-form">
                     <div class="input-group">
-                        <label for="q2">Wat kun je doen om dit te vermijden?</label>
-                        <textarea id="q2" name="q2" rows="3" placeholder="Bijv. remmen, uitwijken..." required></textarea>
+                        <label>Wat kun je doen om dit te vermijden?</label>
+                        <div id="q2-inputs-container" class="dynamic-inputs">
+                            <input type="text" name="q2[]" placeholder="Bijv. remmen..." required>
+                        </div>
+                        <button type="button" id="add-q2-btn" class="btn secondary-btn add-btn">+ Voeg nog een mogelijkheid toe</button>
                     </div>
 
-                    <button type="submit" class="btn submit-btn">Bekijk de afloop</button>
+                    <button type="submit" class="btn submit-btn mt-auto">Bekijk de afloop</button>
                 </form>
             </div>
         </section>
