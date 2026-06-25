@@ -181,7 +181,7 @@ h1 {
     border: 3px solid #fff;
     transform: translate(-50%, -50%);
     box-shadow: 0 0 15px rgba(244, 63, 94, 0.8);
-    pointer-events: none;
+    cursor: pointer;
     animation: markerPulse 1.5s infinite;
 }
 
@@ -255,6 +255,34 @@ input[type=range]:focus {
 }
 
 /* Reflection Carousel */
+#reflection-phase {
+    background-color: var(--bg-color);
+    padding: 1rem;
+}
+
+.app-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.logo {
+    height: 24px;
+    object-fit: contain;
+}
+
+.progress-indicator {
+    font-size: 0.85rem;
+    font-weight: 600;
+    background: var(--surface-color);
+    padding: 0.3rem 0.8rem;
+    border-radius: 20px;
+    color: var(--primary-color);
+}
+
 .carousel-wrapper {
     flex: 1;
     display: flex;
