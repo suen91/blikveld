@@ -186,36 +186,32 @@ h1 {
 
 .category-grid-6 {
     display: grid;
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
     width: 100%;
     max-width: 800px;
     padding-bottom: max(2rem, env(safe-area-inset-bottom));
 }
-@media (min-width: 600px) {
-    .category-grid-6 {
-        grid-template-columns: 1fr 1fr;
-    }
-}
 
 .training-card {
     position: relative;
-    border-radius: 40px;
+    border-radius: 24px;
     overflow: hidden;
-    min-height: 280px;
+    aspect-ratio: 4 / 5;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     text-align: center;
     text-decoration: none;
-    background-color: #bbf7f8; /* Lichtblauw als fallback */
+    background-color: #bbf7f8;
     background-size: cover;
     background-position: center;
     box-shadow: 0 10px 30px rgba(0,0,0,0.15);
     cursor: pointer;
     transition: transform 0.3s;
     -webkit-tap-highlight-color: transparent;
+    color: #fff; /* Force white text */
 }
 .training-card:active, .training-card:hover {
     transform: scale(0.98);
@@ -225,8 +221,8 @@ h1 {
     content: '';
     position: absolute;
     top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(0, 0, 0, 0.4); /* Iets donkerder voor wit contrast */
-    backdrop-filter: blur(8px); /* Glass look */
+    background: rgba(0, 0, 0, 0.25);
+    backdrop-filter: blur(4px);
     z-index: 1;
 }
 
@@ -239,59 +235,49 @@ h1 {
     justify-content: center;
     width: 100%;
     height: 100%;
-    padding: 2rem;
+    padding: 1rem;
 }
 
 .tc-duration {
     position: absolute;
-    top: 1.5rem;
-    right: 2rem;
+    top: 1rem;
+    right: 1rem;
     font-family: 'Lato', sans-serif;
     font-weight: 700;
-    font-size: 1rem;
+    font-size: 0.8rem;
 }
 
 .tc-subtitle {
     font-family: 'Lato', sans-serif;
     font-weight: 400;
-    font-size: 1.2rem;
-    margin-bottom: -0.2rem;
+    font-size: 0.9rem;
+    margin-bottom: 0rem;
 }
 
 .tc-title {
     font-family: 'Big Shoulders Text', sans-serif;
     font-weight: 900;
-    font-size: 4.5rem;
+    font-size: 2.8rem;
     line-height: 0.9;
     text-transform: uppercase;
-    margin-bottom: 2rem;
+    margin-bottom: 1.5rem;
     white-space: pre-line;
 }
 
 .tc-btn {
     font-family: 'Lato', sans-serif;
     font-weight: 400;
-    font-size: 1.1rem;
-    padding: 0.6rem 1.5rem;
+    font-size: 0.9rem;
+    padding: 0.4rem 1rem;
     border-radius: 50px;
-    border: 2px solid;
+    border: 1px solid #fff;
     background: transparent;
+    color: #fff;
     transition: background 0.2s;
 }
 
 /* Theme Colors */
-.training-card.theme-dark {
-    color: #000;
-}
-.training-card.theme-dark .tc-btn {
-    border-color: #000;
-}
-.training-card.theme-light {
-    color: #fff;
-}
-.training-card.theme-light .tc-btn {
-    border-color: #fff;
-}
+/* Removed as everything is forced to white now */
 
 /* Onboarding Phase */
 #onboarding-phase {
