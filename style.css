@@ -162,8 +162,25 @@ h1 {
     padding: 1.2rem;
     font-size: 1.2rem;
     font-weight: 700;
-    margin-top: auto;
+    margin-top: 1.5rem; /* Replaced mt-auto so it stays right under the inputs */
     margin-bottom: max(1rem, env(safe-area-inset-bottom));
+}
+
+.back-btn {
+    font-family: 'Lato', sans-serif;
+    font-size: 2rem;
+    font-weight: 700;
+    color: #fff;
+    background: transparent;
+    border: none;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    align-self: flex-start;
+    margin-bottom: 0.5rem;
+    opacity: 0.8;
+}
+.back-btn:hover {
+    opacity: 1;
 }
 
 /* Phase 0.5B: Category Select Phase */
@@ -281,67 +298,108 @@ h1 {
 
 /* Onboarding Phase */
 #onboarding-phase {
-    background-color: #0b1a50; /* A bit more blue like the screenshot */
-    padding: 2rem 1.5rem;
+    background-color: var(--bg-color);
+    padding: 1rem;
+    overflow-y: auto;
+}
+.onboarding-container {
     display: flex;
     flex-direction: column;
     align-items: center;
-    text-align: center;
-    overflow-y: auto;
+    max-width: 500px;
+    margin: 0 auto;
+    min-height: 100%;
+}
+.logo-large {
+    width: 60%;
+    max-width: 200px;
+    margin-bottom: 2rem;
 }
 .instruction-title {
-    color: #ffd700; /* Yellow from screenshot */
-    font-size: 2rem;
+    font-family: 'Big Shoulders Text', sans-serif;
+    color: #fff;
+    font-size: 3rem;
+    font-weight: 900;
     margin-top: 1rem;
     margin-bottom: 2rem;
     text-transform: uppercase;
+    letter-spacing: 1px;
 }
 .instruction-list {
-    text-align: left;
-    list-style-type: disc;
-    padding-left: 1.5rem;
-    margin-bottom: 3rem;
+    list-style: none;
+    padding: 0;
+    margin-bottom: 1.5rem;
+    width: 100%;
 }
 .instruction-list li {
+    font-family: 'Lato', sans-serif;
     font-size: 1.1rem;
-    margin-bottom: 1.5rem;
-    line-height: 1.5;
-    font-weight: 600;
+    margin-bottom: 1.2rem;
+    position: relative;
+    padding-left: 1.5rem;
+    line-height: 1.4;
+    color: #fff;
+}
+.instruction-list li::before {
+    content: "•";
+    color: var(--primary-color);
+    font-size: 1.5rem;
+    position: absolute;
+    left: 0;
+    top: -0.2rem;
 }
 
-.tap-animation {
+.demo-interaction {
     position: relative;
-    margin: 1rem auto 2rem;
-    font-size: 3.5rem;
-    width: 60px;
-    height: 60px;
+    width: 100%;
+    max-width: 300px;
+    margin: 1rem 0 2rem 0;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+    aspect-ratio: 16 / 9;
+    background-color: #1e293b;
 }
-.tap-circle {
+.demo-screenshot {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    opacity: 0.6;
+}
+.demo-red-dot {
     position: absolute;
-    width: 50px;
-    height: 50px;
-    background-color: var(--accent-color);
+    width: 24px;
+    height: 24px;
+    background-color: #ff3b30;
+    border: 3px solid #fff;
     border-radius: 50%;
-    opacity: 0;
-    left: 50%;
     top: 50%;
+    left: 50%;
     transform: translate(-50%, -50%);
-    animation: tapPulse 2s infinite ease-out;
+    animation: dot-appear 2s infinite;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+    z-index: 5;
 }
-.tap-hand {
+@keyframes dot-appear {
+    0%, 45% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+    50%, 90% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+    100% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+}
+.tap-animation {
+    font-size: 3.5rem;
     position: absolute;
-    left: 50%;
     top: 50%;
+    left: 50%;
     transform: translate(-30%, -20%);
-    animation: handTap 2s infinite;
+    animation: tap-bounce 2s infinite;
+    text-shadow: 0 4px 10px rgba(0,0,0,0.5);
+    z-index: 10;
 }
-@keyframes tapPulse {
-    0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0.8; }
-    100% { transform: translate(-50%, -50%) scale(2); opacity: 0; }
-}
-@keyframes handTap {
-    0%, 100% { transform: translate(-30%, -20%) scale(1); }
-    50% { transform: translate(-50%, -50%) scale(0.9); }
+@keyframes tap-bounce {
+    0%, 40% { transform: translate(-30%, -20%) scale(1); }
+    50% { transform: translate(-45%, -35%) scale(0.85); }
+    60%, 100% { transform: translate(-30%, -20%) scale(1); }
 }
 
 /* Video Phase */
@@ -432,21 +490,74 @@ h1 {
     100% { box-shadow: 0 0 0 0 rgba(244, 63, 94, 0); }
 }
 
-.interaction-top-controls {
+#controls-container {
     position: absolute;
-    top: 20px;
-    right: 20px;
-    z-index: 20;
+    top: 0; left: 0; right: 0; bottom: 0;
+    pointer-events: none; /* Passes clicks through to video/markers */
+    z-index: 10;
     display: flex;
-    gap: 12px;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
-.btn-glass {
-    background: rgba(15, 23, 42, 0.6) !important;
-    backdrop-filter: blur(8px);
-    border: 1px solid rgba(255,255,255,0.2) !important;
-    color: #fff !important;
+.top-right-controls {
+    display: flex;
+    gap: 1rem;
+    padding: 1rem;
+    justify-content: flex-end;
+    pointer-events: auto; /* Re-enable clicks */
 }
+
+.icon-btn-naked {
+    background: transparent;
+    border: none;
+    padding: 0;
+    margin: 0;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    outline: none; /* removes the dashed focus ring */
+}
+.icon-btn-naked svg {
+    display: block;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+}
+.icon-btn-naked .hidden {
+    display: none;
+}
+.btn-small {
+    padding: 0.6rem 1.2rem;
+    font-size: 1rem;
+}
+
+.bottom-bar {
+    width: 100%;
+    padding: 1rem 2rem;
+    background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+    pointer-events: auto; /* Re-enable clicks */
+}
+
+#video-scrubber {
+    width: 100%;
+    height: 6px;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 5px;
+    outline: none;
+    -webkit-appearance: none;
+    cursor: pointer;
+}
+
+#video-scrubber::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--primary-color);
+    cursor: pointer;
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+};
 
 .scrubber-container {
     position: absolute;

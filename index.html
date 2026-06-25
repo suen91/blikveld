@@ -62,6 +62,7 @@
         <!-- Phase 0.5B: Category Select Phase -->
         <section id="category-select-phase" class="phase hidden menu-bg">
             <div class="menu-container" style="padding-top: 1rem;">
+                <button type="button" id="back-to-user-btn" class="back-btn">←</button>
                 <h2 class="category-main-title">Kies je training</h2>
                 <div id="dynamic-category-grid" class="category-grid-6">
                     <!-- Categories will be injected here by app.js -->
@@ -70,8 +71,9 @@
         </section>
 
         <!-- Phase 1: Onboarding Instructions (Portrait) -->
-        <section id="onboarding-phase" class="phase hidden">
-            <div class="onboarding-container">
+        <section id="onboarding-phase" class="phase hidden menu-bg">
+            <button type="button" id="back-to-categories-btn" class="back-btn" style="position: absolute; top: 1rem; left: 1.5rem; z-index: 10;">←</button>
+            <div class="onboarding-container" style="padding-top: 3rem;">
                 <img src="brand assets/Blikveld_logo_digitaal.png" alt="Blikveld Logo" class="logo-large">
                 <h1 class="instruction-title">INSTRUCTIE</h1>
                 <ul class="instruction-list">
@@ -79,28 +81,31 @@
                     <li>Zie je een gevaar? Tik dan direct op die plek op de video. De video pauzeert en plaatst een markering.</li>
                     <li>Heb je alle gevaren gemarkeerd? Klik op 'Ik ben klaar' om aan te geven wat je zag.</li>
                 </ul>
-                <div class="tap-animation">
-                    <div class="tap-circle"></div>
-                    <div class="tap-hand">👆</div>
+                <div class="demo-interaction">
+                    <img src="" class="demo-screenshot" id="onboarding-demo-img" alt="Demo interactie">
+                    <div class="demo-red-dot"></div>
+                    <div class="tap-animation">👆</div>
                 </div>
-                <button id="start-btn" class="btn primary-btn mt-auto">Start Training</button>
+                <button type="button" id="start-btn" class="btn primary-btn btn-blob" style="width: 100%; margin-top: auto;">Start Training</button>
             </div>
         </section>
 
         <!-- Phase 1: Interactive Video (Landscape) -->
         <section id="interaction-phase" class="phase hidden">
-            <div class="video-container">
-                <video id="interaction-video" playsinline preload="auto" muted></video>
-                <div id="marker-overlay" class="marker-overlay"></div>
-            </div>
+            <video id="interaction-video" playsinline preload="auto"></video>
+            <div id="marker-overlay"></div>
             
-            <div class="interaction-top-controls">
-                <button id="play-pause-btn" class="btn secondary-btn btn-small btn-glass">Pauzeer</button>
-                <button id="finish-interaction-btn" class="btn primary-btn btn-small">Ik ben klaar</button>
-            </div>
-
-            <div class="scrubber-container">
-                <input type="range" id="video-scrubber" min="0" max="100" value="0" step="0.1">
+            <div id="controls-container">
+                <div class="top-right-controls">
+                    <button type="button" id="play-pause-btn" class="icon-btn-naked">
+                        <svg class="icon-pause" viewBox="0 0 24 24" width="48" height="48" stroke="#fff" stroke-width="2" fill="#fff"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>
+                        <svg class="icon-play hidden" viewBox="0 0 24 24" width="48" height="48" stroke="#fff" stroke-width="2" fill="#fff"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+                    </button>
+                    <button type="button" id="finish-interaction-btn" class="btn primary-btn btn-small">Verder</button>
+                </div>
+                <div class="bottom-bar">
+                    <input type="range" id="video-scrubber" min="0" max="100" value="0" step="0.1">
+                </div>
             </div>
 
             <div id="video-play-overlay" class="overlay hidden" style="background: rgba(0,0,0,0.7); z-index: 20;">

@@ -18,10 +18,12 @@ const UI = {
     userInfoPhase: document.getElementById('user-info-phase'),
     categorySelectPhase: document.getElementById('category-select-phase'),
     dynamicCategoryGrid: document.getElementById('dynamic-category-grid'),
+    backToUserBtn: document.getElementById('back-to-user-btn'),
     userInfoForm: document.getElementById('user-info-form'),
     userNameInput: document.getElementById('user-name'),
     userAgeInput: document.getElementById('user-age'),
     onboardingPhase: document.getElementById('onboarding-phase'),
+    backToCategoriesBtn: document.getElementById('back-to-categories-btn'),
     
     interactionPhase: document.getElementById('interaction-phase'),
     interactionVideo: document.getElementById('interaction-video'),
@@ -85,6 +87,27 @@ function setupEventListeners() {
         checkOrientation();
     });
 
+    // Back Buttons
+    if (UI.backToUserBtn) {
+        UI.backToUserBtn.addEventListener('click', () => {
+            APP_STATE.phase = 'USER_INFO';
+            hideAllPhases();
+            UI.userInfoPhase.classList.remove('hidden');
+            checkOrientation();
+        });
+    }
+
+    if (UI.backToCategoriesBtn) {
+        UI.backToCategoriesBtn.addEventListener('click', () => {
+            APP_STATE.phase = 'CATEGORY_SELECT';
+            APP_STATE.selectedCategory = null;
+            APP_STATE.situations = [];
+            hideAllPhases();
+            UI.categorySelectPhase.classList.remove('hidden');
+            checkOrientation();
+        });
+    }
+
     UI.startBtn.addEventListener('click', startInteractionPhase);
     
     // Dismiss keyboard on carousel swipe
@@ -127,11 +150,21 @@ function setupEventListeners() {
     });
 
     UI.interactionVideo.addEventListener('play', () => {
-        UI.playPauseBtn.innerText = 'Pauzeer';
+        const iconPlay = UI.playPauseBtn.querySelector('.icon-play');
+        const iconPause = UI.playPauseBtn.querySelector('.icon-pause');
+        if(iconPlay && iconPause) {
+            iconPlay.classList.add('hidden');
+            iconPause.classList.remove('hidden');
+        }
     });
 
     UI.interactionVideo.addEventListener('pause', () => {
-        UI.playPauseBtn.innerText = 'Speel af';
+        const iconPlay = UI.playPauseBtn.querySelector('.icon-play');
+        const iconPause = UI.playPauseBtn.querySelector('.icon-pause');
+        if(iconPlay && iconPause) {
+            iconPause.classList.add('hidden');
+            iconPlay.classList.remove('hidden');
+        }
     });
 
     // Placing a marker
@@ -154,7 +187,7 @@ function setupEventListeners() {
     // Fallback Play Buttons
     UI.manualPlayBtn.addEventListener('click', () => {
         UI.videoPlayOverlay.classList.add('hidden');
-        UI.interactionVideo.muted = true;
+        UI.interactionVideo.muted = false;
         UI.interactionVideo.play().catch(e => {
             alert("Video kon niet afspelen: " + e.message);
             UI.videoPlayOverlay.classList.remove('hidden');
@@ -163,9 +196,9 @@ function setupEventListeners() {
 
     UI.conclusionManualPlayBtn.addEventListener('click', () => {
         UI.conclusionPlayOverlay.classList.add('hidden');
-        UI.conclusionVideo.muted = true;
+        UI.conclusionVideo.muted = false;
         UI.conclusionVideo.play().catch(e => {
-            // Keep hidden if it plays, or show if it fails (not likely since user gesture)
+            // Keep hidden if it plays, or show if it fails
         });
     });
 }
@@ -199,6 +232,12 @@ function renderCategories() {
         card.addEventListener('click', () => {
             APP_STATE.selectedCategory = cat.id;
             APP_STATE.situations = cat.videos;
+            
+            // Dynamically set the demo image to match the chosen category
+            const demoImg = document.getElementById('onboarding-demo-img');
+            if (demoImg) {
+                demoImg.src = cat.bgImage || 'brand assets/Blikveld_logo_digitaal.png';
+            }
             
             APP_STATE.phase = 'ONBOARDING';
             hideAllPhases();
@@ -327,7 +366,7 @@ function startInteractionPhase() {
     const situation = APP_STATE.situations[APP_STATE.currentIndex];
     UI.interactionVideo.src = situation.videoA;
     UI.interactionVideo.load();
-    UI.interactionVideo.muted = true;
+    UI.interactionVideo.muted = false; // Zet audio standaard AAN
     
     // Auto-play attempt
     let playPromise = UI.interactionVideo.play();
@@ -447,7 +486,7 @@ function startConclusionPhase() {
     const situation = APP_STATE.situations[APP_STATE.currentIndex];
     UI.conclusionVideo.src = situation.videoB;
     UI.conclusionVideo.load();
-    UI.conclusionVideo.muted = true;
+    UI.conclusionVideo.muted = false; // Zet audio standaard AAN
     
     checkOrientation();
 }
