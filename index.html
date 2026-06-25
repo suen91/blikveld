@@ -3,8 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Blikveld Gevaarherkenning</title>
+    <title>Blikveld - Braindance MVP</title>
     <meta name="description" content="Interactieve gevaarherkenningstraining voor mobiel gebruik.">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Text:wght@900&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    
     <link rel="stylesheet" href="style.css">
     <!-- Google Fonts: Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -32,8 +38,8 @@
             </div>
         </section>
 
-        <!-- Phase 0.5: Menu Phase (Gen-Z Style) -->
-        <section id="menu-phase" class="phase hidden menu-bg">
+        <!-- Phase 0.5A: User Info Phase -->
+        <section id="user-info-phase" class="phase hidden menu-bg">
             <div class="menu-container">
                 <img src="brand assets/Blikveld_logo_digitaal.png" alt="Blikveld Logo" class="menu-logo">
                 <h1 class="menu-title">Welkom bij Blikveld</h1>
@@ -48,29 +54,18 @@
                         <label for="user-age">Hoe oud ben je?</label>
                         <input type="number" id="user-age" placeholder="Je leeftijd" required autocomplete="off" min="10" max="99">
                     </div>
-                    
-                    <h3 class="category-title">Kies je training:</h3>
-                    <div class="category-grid">
-                        <button type="button" class="category-btn" data-category="auto_training">
-                            <span class="cat-icon">🚗</span>
-                            <span class="cat-name">Auto (Basis)</span>
-                        </button>
-                        <button type="button" class="category-btn" data-category="auto_vervolg">
-                            <span class="cat-icon">🏎️</span>
-                            <span class="cat-name">Auto (Vervolg)</span>
-                        </button>
-                        <button type="button" class="category-btn" data-category="fiets_e_bike">
-                            <span class="cat-icon">🚲</span>
-                            <span class="cat-name">Fiets / E-bike</span>
-                        </button>
-                        <button type="button" class="category-btn" data-category="scooter">
-                            <span class="cat-icon">🛵</span>
-                            <span class="cat-name">Scooter</span>
-                        </button>
-                    </div>
-                    
-                    <button type="submit" id="continue-menu-btn" class="btn primary-btn btn-blob mt-auto">Verder</button>
+                    <button type="submit" id="continue-to-categories-btn" class="btn primary-btn btn-blob mt-auto">Verder</button>
                 </form>
+            </div>
+        </section>
+
+        <!-- Phase 0.5B: Category Select Phase -->
+        <section id="category-select-phase" class="phase hidden menu-bg">
+            <div class="menu-container" style="padding-top: 1rem;">
+                <h2 class="category-main-title">Kies je training</h2>
+                <div id="dynamic-category-grid" class="category-grid-6">
+                    <!-- Categories will be injected here by app.js -->
+                </div>
             </div>
         </section>
 

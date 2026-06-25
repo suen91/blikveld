@@ -1,7 +1,7 @@
 const APP_STATE = {
     situations: [],
     currentIndex: 0,
-    phase: 'SPLASH', // 'SPLASH', 'MENU', 'ONBOARDING', 'INTERACT', 'REFLECT', 'CONCLUSION', 'COMPLETED'
+    phase: 'SPLASH', // 'SPLASH', 'USER_INFO', 'CATEGORY_SELECT', 'ONBOARDING', 'INTERACT', 'REFLECT', 'CONCLUSION', 'COMPLETED'
     sessionId: 'session_' + Date.now(),
     userName: '',
     userAge: '',
@@ -15,11 +15,12 @@ const UI = {
     rotateSubmessage: document.getElementById('rotate-submessage'),
     
     splashPhase: document.getElementById('splash-phase'),
-    menuPhase: document.getElementById('menu-phase'),
+    userInfoPhase: document.getElementById('user-info-phase'),
+    categorySelectPhase: document.getElementById('category-select-phase'),
+    dynamicCategoryGrid: document.getElementById('dynamic-category-grid'),
     userInfoForm: document.getElementById('user-info-form'),
     userNameInput: document.getElementById('user-name'),
     userAgeInput: document.getElementById('user-age'),
-    categoryBtns: document.querySelectorAll('.category-btn'),
     onboardingPhase: document.getElementById('onboarding-phase'),
     
     interactionPhase: document.getElementById('interaction-phase'),
@@ -56,9 +57,9 @@ async function init() {
         
         UI.splashPhase.classList.remove('hidden');
         setTimeout(() => {
-            APP_STATE.phase = 'MENU';
+            APP_STATE.phase = 'USER_INFO';
             hideAllPhases();
-            UI.menuPhase.classList.remove('hidden');
+            UI.userInfoPhase.classList.remove('hidden');
             checkOrientation();
         }, 2000);
 
@@ -70,32 +71,17 @@ async function init() {
 function setupEventListeners() {
     window.matchMedia("(orientation: portrait)").addEventListener("change", checkOrientation);
     
-    // Category Selection Logic
-    UI.categoryBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-            UI.categoryBtns.forEach(b => b.classList.remove('selected'));
-            btn.classList.add('selected');
-            APP_STATE.selectedCategory = btn.getAttribute('data-category');
-        });
-    });
+    renderCategories();
 
     // Menu Form Submission
     UI.userInfoForm.addEventListener('submit', (e) => {
         e.preventDefault();
-        if (!APP_STATE.selectedCategory) {
-            alert("Kies eerst een training voordat je verder gaat!");
-            return;
-        }
         APP_STATE.userName = UI.userNameInput.value;
         APP_STATE.userAge = UI.userAgeInput.value;
         
-        // Load the chosen category
-        APP_STATE.situations = CONFIG.categories[APP_STATE.selectedCategory];
-        
-        // Move to Onboarding
-        APP_STATE.phase = 'ONBOARDING';
+        APP_STATE.phase = 'CATEGORY_SELECT';
         hideAllPhases();
-        UI.onboardingPhase.classList.remove('hidden');
+        UI.categorySelectPhase.classList.remove('hidden');
         checkOrientation();
     });
 
@@ -184,6 +170,46 @@ function setupEventListeners() {
     });
 }
 
+function renderCategories() {
+    UI.dynamicCategoryGrid.innerHTML = '';
+    
+    if (!CONFIG.categories || !Array.isArray(CONFIG.categories)) {
+        console.error("CONFIG.categories is invalid");
+        return;
+    }
+    
+    CONFIG.categories.forEach(cat => {
+        const card = document.createElement('div');
+        card.className = `training-card theme-${cat.theme} ${cat.bgImage ? 'has-image' : ''}`;
+        
+        if (cat.bgImage) {
+            // Check if user uploaded a file, otherwise we fall back to generic CSS bg if path fails
+            card.style.backgroundImage = `url('${cat.bgImage}')`;
+        }
+        
+        card.innerHTML = `
+            <div class="training-card-content">
+                <span class="tc-duration">${cat.duration}</span>
+                <span class="tc-subtitle">${cat.subtitle}</span>
+                <h3 class="tc-title">${cat.title}</h3>
+                <button class="tc-btn">start training</button>
+            </div>
+        `;
+        
+        card.addEventListener('click', () => {
+            APP_STATE.selectedCategory = cat.id;
+            APP_STATE.situations = cat.videos;
+            
+            APP_STATE.phase = 'ONBOARDING';
+            hideAllPhases();
+            UI.onboardingPhase.classList.remove('hidden');
+            checkOrientation();
+        });
+        
+        UI.dynamicCategoryGrid.appendChild(card);
+    });
+}
+
 function handleMarkerPlacement(e) {
     if (e.type === 'touchstart') e.preventDefault();
     
@@ -257,7 +283,7 @@ function checkOrientation() {
         } else {
             hideRotationOverlay();
         }
-    } else if (APP_STATE.phase === 'REFLECT' || APP_STATE.phase === 'ONBOARDING' || APP_STATE.phase === 'MENU') {
+    } else if (APP_STATE.phase === 'REFLECT' || APP_STATE.phase === 'ONBOARDING' || APP_STATE.phase === 'USER_INFO' || APP_STATE.phase === 'CATEGORY_SELECT') {
         if (!isPortrait) {
             showRotationOverlay("Draai naar Portrait", "Hou je telefoon verticaal om te typen.");
         } else {
@@ -280,7 +306,8 @@ function hideRotationOverlay() {
 
 function hideAllPhases() {
     UI.splashPhase.classList.add('hidden');
-    UI.menuPhase.classList.add('hidden');
+    UI.userInfoPhase.classList.add('hidden');
+    UI.categorySelectPhase.classList.add('hidden');
     UI.onboardingPhase.classList.add('hidden');
     UI.interactionPhase.classList.add('hidden');
     UI.reflectionPhase.classList.add('hidden');
