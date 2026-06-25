@@ -42,6 +42,10 @@
                     <li>Zie je een gevaar? Tik dan direct op die plek op de video. De video pauzeert en plaatst een markering.</li>
                     <li>Heb je alle gevaren gemarkeerd? Klik op 'Ik ben klaar' om aan te geven wat je zag.</li>
                 </ul>
+                <div class="tap-animation">
+                    <div class="tap-circle"></div>
+                    <div class="tap-hand">👆</div>
+                </div>
                 <button id="start-btn" class="btn primary-btn mt-auto">Start Training</button>
             </div>
         </section>
@@ -91,11 +95,13 @@
         <section id="conclusion-phase" class="phase hidden">
             <video id="conclusion-video" playsinline preload="auto" muted></video>
             
+            <div id="conclusion-play-overlay" class="overlay" style="background: rgba(0,0,0,0.85); z-index: 20;">
+                <h2 style="color: #fff; margin-bottom: 2rem; font-size: 1.5rem; max-width: 80%; text-align: center;">Bekijk wat er daadwerkelijk gebeurde</h2>
+                <button id="conclusion-manual-play-btn" class="btn primary-btn" style="width: auto; padding: 1rem 3rem;">▶ Start Video</button>
+            </div>
+
             <div id="conclusion-controls" class="hidden">
                  <button id="next-situation-btn" class="btn primary-btn">Volgende Situatie</button>
-            </div>
-            <div id="conclusion-play-overlay" class="overlay hidden" style="background: rgba(0,0,0,0.7); z-index: 20;">
-                <button id="conclusion-manual-play-btn" class="btn primary-btn" style="width: auto; padding: 1rem 3rem;">▶ Start Video</button>
             </div>
         </section>
         

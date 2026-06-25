@@ -65,6 +65,13 @@ function setupEventListeners() {
     
     UI.startBtn.addEventListener('click', startInteractionPhase);
     
+    // Dismiss keyboard on carousel swipe
+    UI.carouselContainer.addEventListener('scroll', () => {
+        if (document.activeElement && document.activeElement.tagName === 'INPUT') {
+            document.activeElement.blur();
+        }
+    }, {passive: true});
+    
     // Scrubber Logic
     UI.scrubber.addEventListener('input', () => {
         isScrubbing = true;
@@ -136,7 +143,7 @@ function setupEventListeners() {
         UI.conclusionPlayOverlay.classList.add('hidden');
         UI.conclusionVideo.muted = true;
         UI.conclusionVideo.play().catch(e => {
-            UI.conclusionPlayOverlay.classList.remove('hidden');
+            // Keep hidden if it plays, or show if it fails (not likely since user gesture)
         });
     });
 }
@@ -367,20 +374,13 @@ function startConclusionPhase() {
     UI.conclusionPhase.classList.remove('hidden');
     UI.conclusionControls.classList.add('hidden');
     
+    // Always show the intermediate "Bekijk wat er daadwerkelijk gebeurde" overlay
+    UI.conclusionPlayOverlay.classList.remove('hidden');
+    
     const situation = APP_STATE.situations[APP_STATE.currentIndex];
     UI.conclusionVideo.src = situation.videoB;
     UI.conclusionVideo.load();
     UI.conclusionVideo.muted = true;
-    
-    let playPromise = UI.conclusionVideo.play();
-    if (playPromise !== undefined) {
-        playPromise.then(() => {
-            const isPortrait = window.matchMedia("(orientation: portrait)").matches;
-            if (isPortrait) UI.conclusionVideo.pause();
-        }).catch(e => {
-            UI.conclusionPlayOverlay.classList.remove('hidden');
-        });
-    }
     
     checkOrientation();
 }

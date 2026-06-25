@@ -116,6 +116,41 @@ h1 {
     font-weight: 600;
 }
 
+.tap-animation {
+    position: relative;
+    margin: 1rem auto 2rem;
+    font-size: 3.5rem;
+    width: 60px;
+    height: 60px;
+}
+.tap-circle {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    background-color: var(--accent-color);
+    border-radius: 50%;
+    opacity: 0;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    animation: tapPulse 2s infinite ease-out;
+}
+.tap-hand {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-30%, -20%);
+    animation: handTap 2s infinite;
+}
+@keyframes tapPulse {
+    0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0.8; }
+    100% { transform: translate(-50%, -50%) scale(2); opacity: 0; }
+}
+@keyframes handTap {
+    0%, 100% { transform: translate(-30%, -20%) scale(1); }
+    50% { transform: translate(-50%, -50%) scale(0.9); }
+}
+
 /* Video Phase */
 #video-phase {
     background-color: #000;
@@ -139,11 +174,16 @@ h1 {
 #video-overlay.hidden {
     display: none;
 }
-#video-controls {
+#conclusion-controls {
     position: absolute;
     bottom: 20px;
     right: 20px;
-    z-index: 10;
+    z-index: 30;
+    transition: opacity 0.4s;
+}
+#conclusion-controls.hidden {
+    opacity: 0;
+    pointer-events: none;
 }
 
 /* Interactive Video Components */
