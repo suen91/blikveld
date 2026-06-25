@@ -38,9 +38,9 @@
                 <img src="brand assets/Blikveld_logo_digitaal.png" alt="Blikveld Logo" class="logo-large">
                 <h1 class="instruction-title">INSTRUCTIE</h1>
                 <ul class="instruction-list">
-                    <li>Je krijgt vier video's te zien. Iedere video stopt op een kritiek moment.</li>
-                    <li>Na iedere video geef je aan wat je denkt dat er gebeurt. Probeer meerdere voorspellingen in te vullen.</li>
-                    <li>Vervolgens zie je hoe de situatie afloopt en wat je had kunnen doen om dit te vermijden.</li>
+                    <li>Je bekijkt straks een verkeerssituatie. Jij hebt de controle over de tijdlijn.</li>
+                    <li>Zie je een gevaar? Tik dan direct op die plek op de video. De video pauzeert en plaatst een markering.</li>
+                    <li>Heb je alle gevaren gemarkeerd? Klik op 'Ik ben klaar' om aan te geven wat je zag.</li>
                 </ul>
                 <button id="start-btn" class="btn primary-btn mt-auto">Start Training</button>
             </div>
@@ -55,7 +55,8 @@
             
             <div class="scrubber-container">
                 <input type="range" id="video-scrubber" min="0" max="100" value="0" step="0.1">
-                <div class="scrubber-actions">
+                <div class="scrubber-actions" style="display: flex; gap: 1rem; justify-content: space-between; width: 100%;">
+                    <button id="play-pause-btn" class="btn secondary-btn btn-small" style="margin-top: 0;">Pauzeer</button>
                     <button id="finish-interaction-btn" class="btn primary-btn btn-small">Ik ben klaar</button>
                 </div>
             </div>

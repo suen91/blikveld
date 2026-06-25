@@ -18,6 +18,7 @@ const UI = {
     interactionVideo: document.getElementById('interaction-video'),
     markerOverlay: document.getElementById('marker-overlay'),
     scrubber: document.getElementById('video-scrubber'),
+    playPauseBtn: document.getElementById('play-pause-btn'),
     finishInteractionBtn: document.getElementById('finish-interaction-btn'),
     videoPlayOverlay: document.getElementById('video-play-overlay'),
     manualPlayBtn: document.getElementById('manual-play-btn'),
@@ -81,6 +82,24 @@ function setupEventListeners() {
         if (!isScrubbing && UI.interactionVideo.duration) {
             UI.scrubber.value = (UI.interactionVideo.currentTime / UI.interactionVideo.duration) * 100;
         }
+        renderVisibleMarkers(UI.interactionVideo.currentTime);
+    });
+    
+    // Play/Pause button
+    UI.playPauseBtn.addEventListener('click', () => {
+        if (UI.interactionVideo.paused) {
+            UI.interactionVideo.play();
+        } else {
+            UI.interactionVideo.pause();
+        }
+    });
+
+    UI.interactionVideo.addEventListener('play', () => {
+        UI.playPauseBtn.innerText = 'Pauzeer';
+    });
+
+    UI.interactionVideo.addEventListener('pause', () => {
+        UI.playPauseBtn.innerText = 'Speel af';
     });
 
     // Placing a marker
@@ -142,12 +161,23 @@ function handleMarkerPlacement(e) {
     
     APP_STATE.markers.push({ time, x: xPct, y: yPct, screenshot, answer: '' });
     
-    // Draw visual marker
-    const dot = document.createElement('div');
-    dot.className = 'braindance-marker';
-    dot.style.left = xPct + '%';
-    dot.style.top = yPct + '%';
-    UI.markerOverlay.appendChild(dot);
+    // Re-render markers for the current time
+    renderVisibleMarkers(time);
+}
+
+function renderVisibleMarkers(currentTime) {
+    UI.markerOverlay.innerHTML = '';
+    
+    APP_STATE.markers.forEach(marker => {
+        // Show marker if we are within 1.0 second of its placement time
+        if (Math.abs(marker.time - currentTime) <= 1.0) {
+            const dot = document.createElement('div');
+            dot.className = 'braindance-marker';
+            dot.style.left = marker.x + '%';
+            dot.style.top = marker.y + '%';
+            UI.markerOverlay.appendChild(dot);
+        }
+    });
 }
 
 function checkOrientation() {
