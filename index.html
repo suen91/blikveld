@@ -25,14 +25,56 @@
     <!-- Main App Container -->
     <main id="app-container">
         
-        <!-- Splash Screen -->
+        <!-- Phase 0: Splash Screen -->
         <section id="splash-phase" class="phase">
             <div class="splash-content">
                 <img src="brand assets/Blikveld_logo_digitaal.png" alt="Blikveld Logo" class="splash-logo">
             </div>
         </section>
 
-        <!-- Onboarding Screen (Portrait) -->
+        <!-- Phase 0.5: Menu Phase (Gen-Z Style) -->
+        <section id="menu-phase" class="phase hidden menu-bg">
+            <div class="menu-container">
+                <img src="brand assets/Blikveld_logo_digitaal.png" alt="Blikveld Logo" class="menu-logo">
+                <h1 class="menu-title">Welkom bij Blikveld</h1>
+                <p class="menu-subtitle">Klaar om je verkeersinzicht te testen?</p>
+                
+                <form id="user-info-form" class="user-info-form">
+                    <div class="input-group">
+                        <label for="user-name">Wat is je naam?</label>
+                        <input type="text" id="user-name" placeholder="Je naam" required autocomplete="off">
+                    </div>
+                    <div class="input-group">
+                        <label for="user-age">Hoe oud ben je?</label>
+                        <input type="number" id="user-age" placeholder="Je leeftijd" required autocomplete="off" min="10" max="99">
+                    </div>
+                    
+                    <h3 class="category-title">Kies je training:</h3>
+                    <div class="category-grid">
+                        <button type="button" class="category-btn" data-category="auto_training">
+                            <span class="cat-icon">🚗</span>
+                            <span class="cat-name">Auto (Basis)</span>
+                        </button>
+                        <button type="button" class="category-btn" data-category="auto_vervolg">
+                            <span class="cat-icon">🏎️</span>
+                            <span class="cat-name">Auto (Vervolg)</span>
+                        </button>
+                        <button type="button" class="category-btn" data-category="fiets_e_bike">
+                            <span class="cat-icon">🚲</span>
+                            <span class="cat-name">Fiets / E-bike</span>
+                        </button>
+                        <button type="button" class="category-btn" data-category="scooter">
+                            <span class="cat-icon">🛵</span>
+                            <span class="cat-name">Scooter</span>
+                        </button>
+                    </div>
+                    
+                    <button type="submit" id="continue-menu-btn" class="btn primary-btn btn-blob mt-auto">Verder</button>
+                </form>
+            </div>
+        </section>
+
+        <!-- Phase 1: Onboarding Instructions (Portrait) -->
         <section id="onboarding-phase" class="phase hidden">
             <div class="onboarding-container">
                 <img src="brand assets/Blikveld_logo_digitaal.png" alt="Blikveld Logo" class="logo-large">

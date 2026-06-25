@@ -1,8 +1,11 @@
 const APP_STATE = {
     situations: [],
     currentIndex: 0,
-    phase: 'SPLASH', // 'SPLASH', 'ONBOARDING', 'INTERACT', 'REFLECT', 'CONCLUSION', 'COMPLETED'
+    phase: 'SPLASH', // 'SPLASH', 'MENU', 'ONBOARDING', 'INTERACT', 'REFLECT', 'CONCLUSION', 'COMPLETED'
     sessionId: 'session_' + Date.now(),
+    userName: '',
+    userAge: '',
+    selectedCategory: null,
     markers: [] // Array of { time, x, y, screenshot, answer }
 };
 
@@ -12,6 +15,11 @@ const UI = {
     rotateSubmessage: document.getElementById('rotate-submessage'),
     
     splashPhase: document.getElementById('splash-phase'),
+    menuPhase: document.getElementById('menu-phase'),
+    userInfoForm: document.getElementById('user-info-form'),
+    userNameInput: document.getElementById('user-name'),
+    userAgeInput: document.getElementById('user-age'),
+    categoryBtns: document.querySelectorAll('.category-btn'),
     onboardingPhase: document.getElementById('onboarding-phase'),
     
     interactionPhase: document.getElementById('interaction-phase'),
@@ -43,26 +51,54 @@ let isScrubbing = false;
 // Initialize App
 async function init() {
     try {
-        APP_STATE.situations = CONFIG.situations;
         setupEventListeners();
         checkOrientation();
         
         UI.splashPhase.classList.remove('hidden');
         setTimeout(() => {
-            APP_STATE.phase = 'ONBOARDING';
+            APP_STATE.phase = 'MENU';
             hideAllPhases();
-            UI.onboardingPhase.classList.remove('hidden');
+            UI.menuPhase.classList.remove('hidden');
             checkOrientation();
         }, 2000);
 
     } catch (e) {
-        console.error("Failed to load config", e);
+        console.error("Failed to load init", e);
     }
 }
 
 function setupEventListeners() {
     window.matchMedia("(orientation: portrait)").addEventListener("change", checkOrientation);
     
+    // Category Selection Logic
+    UI.categoryBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            UI.categoryBtns.forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+            APP_STATE.selectedCategory = btn.getAttribute('data-category');
+        });
+    });
+
+    // Menu Form Submission
+    UI.userInfoForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        if (!APP_STATE.selectedCategory) {
+            alert("Kies eerst een training voordat je verder gaat!");
+            return;
+        }
+        APP_STATE.userName = UI.userNameInput.value;
+        APP_STATE.userAge = UI.userAgeInput.value;
+        
+        // Load the chosen category
+        APP_STATE.situations = CONFIG.categories[APP_STATE.selectedCategory];
+        
+        // Move to Onboarding
+        APP_STATE.phase = 'ONBOARDING';
+        hideAllPhases();
+        UI.onboardingPhase.classList.remove('hidden');
+        checkOrientation();
+    });
+
     UI.startBtn.addEventListener('click', startInteractionPhase);
     
     // Dismiss keyboard on carousel swipe
@@ -221,7 +257,7 @@ function checkOrientation() {
         } else {
             hideRotationOverlay();
         }
-    } else if (APP_STATE.phase === 'REFLECT' || APP_STATE.phase === 'ONBOARDING') {
+    } else if (APP_STATE.phase === 'REFLECT' || APP_STATE.phase === 'ONBOARDING' || APP_STATE.phase === 'MENU') {
         if (!isPortrait) {
             showRotationOverlay("Draai naar Portrait", "Hou je telefoon verticaal om te typen.");
         } else {
@@ -244,6 +280,7 @@ function hideRotationOverlay() {
 
 function hideAllPhases() {
     UI.splashPhase.classList.add('hidden');
+    UI.menuPhase.classList.add('hidden');
     UI.onboardingPhase.classList.add('hidden');
     UI.interactionPhase.classList.add('hidden');
     UI.reflectionPhase.classList.add('hidden');
@@ -355,6 +392,9 @@ function saveAnswersAndContinue() {
     const situation = APP_STATE.situations[APP_STATE.currentIndex];
     const data = {
         sessionId: APP_STATE.sessionId,
+        userName: APP_STATE.userName,
+        userAge: APP_STATE.userAge,
+        category: APP_STATE.selectedCategory,
         situationId: situation.id,
         markers: APP_STATE.markers,
         genericAnswers: APP_STATE.genericAnswers || [],
