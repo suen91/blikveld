@@ -1,29 +1,25 @@
 const CONFIG = {
-  "category": "fiets + e-bike",
+  "category": "auto",
   "situations": [
     {
       "id": 1,
-      "image": "animaties/fiets + e-bike/situatie_1.png",
-      "videoA": "animaties/fiets + e-bike/situatie_1_A.mp4",
-      "videoB": "animaties/fiets + e-bike/situatie_1_B.mp4"
+      "videoA": "animaties/auto/Video 1/Blikveld_1.mp4",
+      "videoB": "animaties/auto/Video 1/Blikveld_1-volledig.mp4"
     },
     {
       "id": 2,
-      "image": "animaties/fiets + e-bike/situatie_2.png",
-      "videoA": "animaties/fiets + e-bike/situatie_2_A.mp4",
-      "videoB": "animaties/fiets + e-bike/situatie_2_B.mp4"
+      "videoA": "animaties/auto/Video 2/Blikveld_2.mp4",
+      "videoB": "animaties/auto/Video 2/Blikveld_2-volledig.mp4"
     },
     {
       "id": 3,
-      "image": "animaties/fiets + e-bike/situatie_3.png",
-      "videoA": "animaties/fiets + e-bike/situatie_3_A.mp4",
-      "videoB": "animaties/fiets + e-bike/situatie_3_B.mp4"
+      "videoA": "animaties/auto/Video 3/Blikveld_3.mp4",
+      "videoB": "animaties/auto/Video 3/Blikveld_3-volledig.mp4"
     },
     {
       "id": 4,
-      "image": "animaties/fiets + e-bike/situatie_4.png",
-      "videoA": "animaties/fiets + e-bike/situatie_4_A.mp4",
-      "videoB": "animaties/fiets + e-bike/situatie_4_B.mp4"
+      "videoA": "animaties/auto/Video 4/Blikveld_4.mp4",
+      "videoB": "animaties/auto/Video 4/Blikveld_4-volledig.mp4"
     }
   ]
 };

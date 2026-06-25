@@ -46,66 +46,54 @@
             </div>
         </section>
 
-        <!-- Phase A & B: Video Player (Landscape) -->
-        <section id="video-phase" class="phase hidden">
-            <video id="main-video" playsinline preload="auto" muted></video>
+        <!-- Phase 1: Interactive Video (Landscape) -->
+        <section id="interaction-phase" class="phase hidden">
+            <div class="video-container">
+                <video id="interaction-video" playsinline preload="auto" muted></video>
+                <div id="marker-overlay" class="marker-overlay"></div>
+            </div>
             
+            <div class="scrubber-container">
+                <input type="range" id="video-scrubber" min="0" max="100" value="0" step="0.1">
+                <div class="scrubber-actions">
+                    <button id="finish-interaction-btn" class="btn primary-btn btn-small">Ik ben klaar</button>
+                </div>
+            </div>
+
             <div id="video-play-overlay" class="overlay hidden" style="background: rgba(0,0,0,0.7); z-index: 20;">
                 <button id="manual-play-btn" class="btn primary-btn" style="width: auto; padding: 1rem 3rem;">▶ Start Video</button>
             </div>
-
-            <div id="video-controls" class="hidden">
-                 <button id="next-phase-btn" class="btn primary-btn">Ga verder</button>
-            </div>
         </section>
 
-        <!-- Phase Input Q1: Form (Portrait) -->
-        <section id="input-q1-phase" class="phase hidden">
+        <!-- Phase 2: Reflection Carousel (Portrait) -->
+        <section id="reflection-phase" class="phase hidden">
             <header class="app-header">
                 <img src="brand assets/Blikveld_logo_digitaal.png" alt="Blikveld Logo" class="logo">
                 <div class="progress-indicator">Situatie <span class="current-sit-num">1</span>/4</div>
             </header>
 
-            <div class="form-container">
-                <h1>Wat zag je zojuist?</h1>
-                <p class="subtitle">Probeer meerdere antwoorden te bedenken.</p>
-
-                <img id="q1-situation-img" class="situation-image hidden" src="" alt="Situatie screenshot">
-
-                <form id="form-q1" class="reflection-form">
-                    <div class="input-group">
-                        <label>Wat denk je dat er gebeurt?</label>
-                        <div id="q1-inputs-container" class="dynamic-inputs">
-                            <input type="text" name="q1[]" placeholder="Mogelijkheid 1..." required>
-                        </div>
-                        <button type="button" id="add-q1-btn" class="btn secondary-btn add-btn">+ Voeg nog een mogelijkheid toe</button>
+            <div class="carousel-wrapper">
+                <h2 class="reflection-title">Jouw Gevaren</h2>
+                <p class="reflection-subtitle">Swipe en geef per markering aan wat je dacht te zien.</p>
+                
+                <form id="reflection-form" class="reflection-form">
+                    <div id="carousel-container" class="carousel-container">
+                        <!-- Dynamically injected carousel items -->
                     </div>
-
-                    <button type="submit" class="btn submit-btn mt-auto">Volgende</button>
-                </form>
-            </div>
-        </section>
-
-        <!-- Phase Input Q2: Form (Portrait) -->
-        <section id="input-q2-phase" class="phase hidden">
-            <header class="app-header">
-                <img src="brand assets/Blikveld_logo_digitaal.png" alt="Blikveld Logo" class="logo">
-                <div class="progress-indicator">Situatie <span class="current-sit-num">1</span>/4</div>
-            </header>
-
-            <div class="form-container">
-                <h1>Wat zag je zojuist?</h1>
-                <p class="subtitle">Hoe zou jij dit vermijden?</p>
-
-                <img id="q2-situation-img" class="situation-image hidden" src="" alt="Situatie screenshot">
-
-                <form id="form-q2" class="reflection-form">
-                    <div id="q2-dynamic-list">
-                        <!-- Q2 inputs will be injected here based on Q1 answers -->
-                    </div>
-
                     <button type="submit" class="btn submit-btn mt-auto">Bekijk de afloop</button>
                 </form>
+            </div>
+        </section>
+
+        <!-- Phase 3: Conclusion Video (Landscape) -->
+        <section id="conclusion-phase" class="phase hidden">
+            <video id="conclusion-video" playsinline preload="auto" muted></video>
+            
+            <div id="conclusion-controls" class="hidden">
+                 <button id="next-situation-btn" class="btn primary-btn">Volgende Situatie</button>
+            </div>
+            <div id="conclusion-play-overlay" class="overlay hidden" style="background: rgba(0,0,0,0.7); z-index: 20;">
+                <button id="conclusion-manual-play-btn" class="btn primary-btn" style="width: auto; padding: 1rem 3rem;">▶ Start Video</button>
             </div>
         </section>
         
