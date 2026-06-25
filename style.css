@@ -353,6 +353,7 @@ input[type=range]:focus {
 
 .carousel-container {
     display: flex;
+    align-items: flex-start; /* Stops cards from stretching all the way down */
     overflow-x: auto;
     scroll-snap-type: x mandatory;
     gap: 1.5rem;
@@ -455,6 +456,10 @@ input[type=range]:focus {
     color: white;
     width: 100%;
     box-shadow: 0 4px 14px 0 rgba(59, 130, 246, 0.39);
+    flex-shrink: 0;
+}
+.submit-btn {
+    margin-bottom: max(1rem, env(safe-area-inset-bottom));
 }
 .primary-btn:hover, .submit-btn:hover {
     background-color: var(--primary-hover);
