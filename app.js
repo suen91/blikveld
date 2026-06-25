@@ -68,6 +68,9 @@ function setupEventListeners() {
     // Scrubber Logic
     UI.scrubber.addEventListener('input', () => {
         isScrubbing = true;
+        if (!UI.interactionVideo.paused) {
+            UI.interactionVideo.pause();
+        }
         if (UI.interactionVideo.duration) {
             UI.interactionVideo.currentTime = (UI.scrubber.value / 100) * UI.interactionVideo.duration;
         }
@@ -75,7 +78,7 @@ function setupEventListeners() {
 
     UI.scrubber.addEventListener('change', () => {
         isScrubbing = false;
-        UI.interactionVideo.pause();
+        // Optionally resume playing if they were playing before, but pausing is safer for interaction
     });
 
     UI.interactionVideo.addEventListener('timeupdate', () => {
@@ -141,6 +144,12 @@ function setupEventListeners() {
 function handleMarkerPlacement(e) {
     if (e.type === 'touchstart') e.preventDefault();
     
+    // Check Max Markers
+    if (APP_STATE.markers.length >= 9) {
+        alert("Je hebt het maximum van 9 markeringen bereikt. Verwijder er één om een nieuwe te plaatsen.");
+        return;
+    }
+
     UI.interactionVideo.pause();
     
     const rect = UI.markerOverlay.getBoundingClientRect();
@@ -168,13 +177,27 @@ function handleMarkerPlacement(e) {
 function renderVisibleMarkers(currentTime) {
     UI.markerOverlay.innerHTML = '';
     
-    APP_STATE.markers.forEach(marker => {
+    APP_STATE.markers.forEach((marker, index) => {
         // Show marker if we are within 1.0 second of its placement time
         if (Math.abs(marker.time - currentTime) <= 1.0) {
             const dot = document.createElement('div');
             dot.className = 'braindance-marker';
             dot.style.left = marker.x + '%';
             dot.style.top = marker.y + '%';
+            
+            // Allow removal by clicking on the marker
+            dot.addEventListener('click', (e) => {
+                e.stopPropagation(); // prevent placing new marker
+                APP_STATE.markers.splice(index, 1);
+                renderVisibleMarkers(UI.interactionVideo.currentTime);
+            });
+            dot.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                APP_STATE.markers.splice(index, 1);
+                renderVisibleMarkers(UI.interactionVideo.currentTime);
+            }, {passive: false});
+
             UI.markerOverlay.appendChild(dot);
         }
     });
@@ -249,11 +272,6 @@ function startInteractionPhase() {
 }
 
 function startReflectionPhase() {
-    if (APP_STATE.markers.length === 0) {
-        alert("Je hebt nog geen gevaren gemarkeerd. Tik op het scherm om een gevaar aan te wijzen!");
-        return;
-    }
-
     APP_STATE.phase = 'REFLECT';
     hideAllPhases();
     UI.reflectionPhase.classList.remove('hidden');
@@ -267,6 +285,33 @@ function startReflectionPhase() {
 function buildCarousel() {
     UI.carouselContainer.innerHTML = '';
     
+    if (APP_STATE.markers.length === 0) {
+        // Fallback: Generic Card when no markers were placed
+        const card = document.createElement('div');
+        card.className = 'carousel-card';
+        card.innerHTML = `
+            <div class="card-input-section" style="justify-content: center;">
+                <label style="font-size: 1.2rem; margin-bottom: 1rem;">Je hebt niks gemarkeerd. Wat denk je dat er kan gebeuren?</label>
+                <div id="generic-inputs-container" style="display:flex; flex-direction:column; gap:0.5rem;">
+                    <input type="text" class="generic-answer-input" placeholder="Mogelijkheid 1..." required>
+                </div>
+                <button type="button" id="add-generic-answer-btn" class="btn secondary-btn" style="margin-top: 1rem;">+ Voeg nog een antwoord toe</button>
+            </div>
+        `;
+        UI.carouselContainer.appendChild(card);
+        
+        document.getElementById('add-generic-answer-btn').addEventListener('click', () => {
+            const container = document.getElementById('generic-inputs-container');
+            const num = container.children.length + 1;
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.className = 'generic-answer-input';
+            input.placeholder = 'Mogelijkheid ' + num + '...';
+            container.appendChild(input);
+        });
+        return;
+    }
+
     APP_STATE.markers.forEach((marker, index) => {
         const card = document.createElement('div');
         card.className = 'carousel-card';
@@ -287,17 +332,25 @@ function buildCarousel() {
 }
 
 function saveAnswersAndContinue() {
-    const inputs = document.querySelectorAll('.marker-answer-input');
-    inputs.forEach(input => {
-        const idx = input.getAttribute('data-index');
-        APP_STATE.markers[idx].answer = input.value;
-    });
+    if (APP_STATE.markers.length === 0) {
+        const genericInputs = document.querySelectorAll('.generic-answer-input');
+        const answers = [];
+        genericInputs.forEach(input => { if(input.value) answers.push(input.value); });
+        APP_STATE.genericAnswers = answers;
+    } else {
+        const inputs = document.querySelectorAll('.marker-answer-input');
+        inputs.forEach(input => {
+            const idx = input.getAttribute('data-index');
+            APP_STATE.markers[idx].answer = input.value;
+        });
+    }
     
     const situation = APP_STATE.situations[APP_STATE.currentIndex];
     const data = {
         sessionId: APP_STATE.sessionId,
         situationId: situation.id,
         markers: APP_STATE.markers,
+        genericAnswers: APP_STATE.genericAnswers || [],
         timestamp: new Date().toISOString()
     };
     
