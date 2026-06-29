@@ -20,7 +20,8 @@ body {
     background-color: var(--bg-color);
     color: var(--text-color);
     overflow: hidden; /* Prevent scrolling on body, handle within containers */
-    height: 100vh;
+    height: 100vh; /* Fallback for older browsers */
+    height: 100dvh; /* Dynamic Viewport Height for mobile browsers */
     width: 100vw;
 }
 
