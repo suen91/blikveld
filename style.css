@@ -558,7 +558,7 @@ h1 {
     background: var(--primary-color);
     cursor: pointer;
     box-shadow: 0 0 10px rgba(0,0,0,0.5);
-};
+}
 
 .scrubber-container {
     position: absolute;
@@ -866,7 +866,6 @@ input[type=range]:focus {
     justify-content: center;
     z-index: 10;
     pointer-events: none; /* Ensures it doesn't block screen interactions */
-    backdrop-filter: blur(4px);
 }
 
 #expert-text {
