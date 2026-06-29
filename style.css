@@ -274,7 +274,7 @@ h1 {
 .tc-title {
     font-family: 'Big Shoulders Text', sans-serif;
     font-weight: 900;
-    font-size: 2.8rem;
+    font-size: clamp(1.8rem, 8vw, 2.8rem);
     line-height: 0.9;
     text-transform: uppercase;
     margin-bottom: 1.5rem;
@@ -318,10 +318,10 @@ h1 {
 .instruction-title {
     font-family: 'Big Shoulders Text', sans-serif;
     color: #fff;
-    font-size: 3rem;
+    font-size: clamp(2rem, 10vw, 3rem);
     font-weight: 900;
     margin-top: 1rem;
-    margin-bottom: 2rem;
+    margin-bottom: 1.5rem;
     text-transform: uppercase;
     letter-spacing: 1px;
 }
@@ -333,8 +333,8 @@ h1 {
 }
 .instruction-list li {
     font-family: 'Lato', sans-serif;
-    font-size: 1.1rem;
-    margin-bottom: 1.2rem;
+    font-size: clamp(0.95rem, 4vw, 1.1rem);
+    margin-bottom: 1rem;
     position: relative;
     padding-left: 1.5rem;
     line-height: 1.4;
@@ -464,7 +464,7 @@ h1 {
     object-fit: contain;
 }
 
-.marker-overlay {
+#marker-overlay {
     position: absolute;
     inset: 0;
     z-index: 10;
@@ -562,15 +562,9 @@ h1 {
 .scrubber-container {
     position: absolute;
     bottom: 30px;
-    left: 30px;
+    bottom: 30px;
     right: 30px;
     z-index: 15;
-    background: rgba(15, 23, 42, 0.85);
-    backdrop-filter: blur(8px);
-    border-radius: 16px;
-    padding: 1.2rem;
-    display: flex;
-    flex-direction: column;
 }
 
 /* Custom Range Input */
@@ -656,21 +650,32 @@ input[type=range]:focus {
 
 .carousel-container {
     display: flex;
-    align-items: flex-start; /* Stops cards from stretching all the way down */
+    align-items: flex-start;
     overflow-x: auto;
     scroll-snap-type: x mandatory;
     gap: 1.5rem;
-    padding-bottom: 1.5rem;
+    padding-bottom: 2rem;
     -webkit-overflow-scrolling: touch;
-    scrollbar-width: none; /* Firefox */
 }
+
+/* Custom scrollbar for desktop so it's obvious you can scroll */
 .carousel-container::-webkit-scrollbar {
-    display: none; /* Chrome/Safari */
+    height: 12px;
+}
+.carousel-container::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    margin: 0 1rem;
+}
+.carousel-container::-webkit-scrollbar-thumb {
+    background: var(--primary-color);
+    border-radius: 8px;
 }
 
 .carousel-card {
-    scroll-snap-align: center;
     flex: 0 0 85%;
+    max-width: 450px; /* Cap size on desktop */
+    scroll-snap-align: center;
     background-color: var(--surface-color);
     border-radius: 16px;
     overflow: hidden;
@@ -825,3 +830,51 @@ input[type=range]:focus {
     margin-bottom: 2rem;
     color: var(--text-muted);
 }
+
+/* Expert Phase */
+#expert-phase {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background: #000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+#expert-image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+#expert-subtitle-container {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 2rem 2.5rem;
+    background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.7) 60%, transparent 100%);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+    z-index: 10;
+}
+
+#expert-text {
+    color: #fff;
+    font-family: 'Lato', sans-serif;
+    font-size: clamp(1.1rem, 3vw, 1.5rem);
+    font-weight: 400;
+    line-height: 1.5;
+    text-shadow: 0 2px 6px rgba(0,0,0,0.8);
+    flex: 1;
+}
+
+#expert-next-btn {
+    white-space: nowrap;
+    padding: 0.8rem 1.5rem;
+}
+

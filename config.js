@@ -8,7 +8,18 @@ const CONFIG = {
       bgImage: "knoppen/auto_basis.webp",
       theme: "dark", // Means text will be dark (e.g. for a solid light blue BG) or we can use "light" for white text over a blurred image
       videos: [
-        { id: 1, videoA: "animaties/auto/Video 1/Blikveld_1.mp4", videoB: "animaties/auto/Video 1/Blikveld_1-volledig.mp4" },
+        { 
+            id: 1, 
+            videoA: "animaties/auto/Video 1/Blikveld_1.mp4", 
+            videoB: "animaties/auto/Video 1/Blikveld_1-volledig.mp4",
+            expertImages: [
+                { src: "animaties/auto/Video 1/Blikveld_1-0.jpg", text: "Zoals je in de video hebt kunnen zien, blokkeert de vrachtwagen hier jouw zicht. Hierdoor kun je niet goed zien dat er een auto van links komt." },
+                { src: "animaties/auto/Video 1/Blikveld_1-1.jpg", text: "Dit betekent ook dat de auto die van links komt, jou ook niet ziet." },
+                { src: "animaties/auto/Video 1/Blikveld_1-2.jpg", text: "Het kan gebeuren dat de vrachtwagen met oplegger te langzaam de weg op rijdt. Hierdoor wordt jouw weg geblokkeerd." },
+                { src: "animaties/auto/Video 1/Blikveld_1-3.jpg", text: "Er kan nog een auto achter de vrachtwagen aanrijden. Door de bosjes en bomen aan de rechterkant kunnen jij en deze auto elkaar minder goed zien." },
+                { src: "animaties/auto/Video 1/Blikveld_1-4.jpg", text: "Je rijdt met een bepaalde snelheid over deze doorgaande weg. De auto die van rechts komt kan de situatie verkeerd inschatten en denken dat hij er nog voor kan." }
+            ]
+        },
         { id: 2, videoA: "animaties/auto/Video 2/Blikveld_2.mp4", videoB: "animaties/auto/Video 2/Blikveld_2-volledig.mp4" },
         { id: 3, videoA: "animaties/auto/Video 3/Blikveld_3.mp4", videoB: "animaties/auto/Video 3/Blikveld_3-volledig.mp4" },
         { id: 4, videoA: "animaties/auto/Video 4/Blikveld_4.mp4", videoB: "animaties/auto/Video 4/Blikveld_4-volledig.mp4" }

@@ -1,7 +1,7 @@
 const APP_STATE = {
     situations: [],
     currentIndex: 0,
-    phase: 'SPLASH', // 'SPLASH', 'USER_INFO', 'CATEGORY_SELECT', 'ONBOARDING', 'INTERACT', 'REFLECT', 'CONCLUSION', 'COMPLETED'
+    phase: 'SPLASH', // 'SPLASH', 'USER_INFO', 'CATEGORY_SELECT', 'ONBOARDING', 'INTERACT', 'REFLECT', 'CONCLUSION', 'EXPERT', 'COMPLETED'
     sessionId: 'session_' + Date.now(),
     userName: '',
     userAge: '',
@@ -44,6 +44,11 @@ const UI = {
     nextSituationBtn: document.getElementById('next-situation-btn'),
     conclusionPlayOverlay: document.getElementById('conclusion-play-overlay'),
     conclusionManualPlayBtn: document.getElementById('conclusion-manual-play-btn'),
+    
+    expertPhase: document.getElementById('expert-phase'),
+    expertImage: document.getElementById('expert-image'),
+    expertText: document.getElementById('expert-text'),
+    expertNextBtn: document.getElementById('expert-next-btn'),
     
     completedPhase: document.getElementById('completed-phase'),
     startBtn: document.getElementById('start-btn')
@@ -178,7 +183,16 @@ function setupEventListeners() {
         saveAnswersAndContinue();
     });
 
-    UI.nextSituationBtn.addEventListener('click', nextSituation);
+    UI.nextSituationBtn.addEventListener('click', () => {
+        const sit = APP_STATE.situations[APP_STATE.currentIndex];
+        if (sit.expertImages && sit.expertImages.length > 0) {
+            startExpertPhase();
+        } else {
+            nextSituation();
+        }
+    });
+    
+    UI.expertNextBtn.addEventListener('click', handleExpertNext);
 
     UI.conclusionVideo.addEventListener('ended', () => {
         UI.conclusionControls.classList.remove('hidden');
@@ -274,7 +288,13 @@ function handleMarkerPlacement(e) {
     canvas.height = UI.interactionVideo.videoHeight || 360;
     const ctx = canvas.getContext('2d');
     ctx.drawImage(UI.interactionVideo, 0, 0, canvas.width, canvas.height);
-    const screenshot = canvas.toDataURL('image/jpeg', 0.6);
+    
+    let screenshot = 'brand assets/Blikveld_logo_digitaal.png';
+    try {
+        screenshot = canvas.toDataURL('image/jpeg', 0.6);
+    } catch (e) {
+        console.warn("Lokale test-fout: Screenshot kan niet opgeslagen worden via 'file://' protocol vanwege browserbeveiliging. Fallback logo gebruikt.");
+    }
     
     APP_STATE.markers.push({ time, x: xPct, y: yPct, screenshot, answer: '' });
     
@@ -312,9 +332,15 @@ function renderVisibleMarkers(currentTime) {
 }
 
 function checkOrientation() {
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    if (!isMobile) {
+        hideRotationOverlay();
+        return;
+    }
+
     const isPortrait = window.matchMedia("(orientation: portrait)").matches;
     
-    if (APP_STATE.phase === 'INTERACT' || APP_STATE.phase === 'CONCLUSION') {
+    if (APP_STATE.phase === 'INTERACT' || APP_STATE.phase === 'CONCLUSION' || APP_STATE.phase === 'EXPERT') {
         if (isPortrait) {
             showRotationOverlay("Draai naar Landscape", "De video wordt horizontaal afgespeeld.");
             if (APP_STATE.phase === 'INTERACT') UI.interactionVideo.pause();
@@ -351,6 +377,7 @@ function hideAllPhases() {
     UI.interactionPhase.classList.add('hidden');
     UI.reflectionPhase.classList.add('hidden');
     UI.conclusionPhase.classList.add('hidden');
+    UI.expertPhase.classList.add('hidden');
     UI.completedPhase.classList.add('hidden');
 }
 
@@ -488,6 +515,13 @@ function startConclusionPhase() {
     UI.conclusionVideo.load();
     UI.conclusionVideo.muted = false; // Zet audio standaard AAN
     
+    // Update knop tekst afhankelijk van de volgende stap
+    if (situation.expertImages && situation.expertImages.length > 0) {
+        UI.nextSituationBtn.innerText = "Hoe kijkt een ervaren bestuurder hiernaar?";
+    } else {
+        UI.nextSituationBtn.innerText = "Volgende Situatie";
+    }
+    
     checkOrientation();
 }
 
@@ -500,6 +534,42 @@ function nextSituation() {
         checkOrientation();
     } else {
         startInteractionPhase();
+    }
+}
+
+let currentExpertSlide = 0;
+
+function startExpertPhase() {
+    APP_STATE.phase = 'EXPERT';
+    hideAllPhases();
+    UI.expertPhase.classList.remove('hidden');
+    currentExpertSlide = 0;
+    renderExpertSlide();
+    checkOrientation();
+}
+
+function renderExpertSlide() {
+    const sit = APP_STATE.situations[APP_STATE.currentIndex];
+    if (!sit.expertImages) return;
+    
+    const slide = sit.expertImages[currentExpertSlide];
+    UI.expertImage.src = slide.src;
+    UI.expertText.innerText = slide.text;
+    
+    if (currentExpertSlide === sit.expertImages.length - 1) {
+        UI.expertNextBtn.innerText = "Volgende Situatie ▶";
+    } else {
+        UI.expertNextBtn.innerText = "Volgende ▶";
+    }
+}
+
+function handleExpertNext() {
+    const sit = APP_STATE.situations[APP_STATE.currentIndex];
+    if (currentExpertSlide < sit.expertImages.length - 1) {
+        currentExpertSlide++;
+        renderExpertSlide();
+    } else {
+        nextSituation();
     }
 }
 
