@@ -555,12 +555,6 @@ function renderExpertSlide() {
     const slide = sit.expertImages[currentExpertSlide];
     UI.expertImage.src = slide.src;
     UI.expertText.innerText = slide.text;
-    
-    if (currentExpertSlide === sit.expertImages.length - 1) {
-        UI.expertNextBtn.innerText = "Volgende Situatie ▶";
-    } else {
-        UI.expertNextBtn.innerText = "Volgende ▶";
-    }
 }
 
 function handleExpertNext() {

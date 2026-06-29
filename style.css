@@ -309,6 +309,7 @@ h1 {
     max-width: 500px;
     margin: 0 auto;
     min-height: 100%;
+    padding-bottom: 4rem; /* Prevent button from falling off screen */
 }
 .logo-large {
     width: 60%;
@@ -655,6 +656,7 @@ input[type=range]:focus {
     scroll-snap-type: x mandatory;
     gap: 1.5rem;
     padding-bottom: 2rem;
+    margin-bottom: 1rem; /* Prevent scrollbar from overlapping bottom controls */
     -webkit-overflow-scrolling: touch;
 }
 
@@ -854,12 +856,11 @@ input[type=range]:focus {
     bottom: 0;
     left: 0;
     right: 0;
-    padding: 2rem 2.5rem;
-    background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.7) 60%, transparent 100%);
+    padding: 2rem 5rem max(2.5rem, env(safe-area-inset-bottom)) 2rem; /* Extra padding for safe areas and next button */
+    background: linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0.7) 60%, transparent 100%);
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 2rem;
+    align-items: flex-end;
+    justify-content: flex-start;
     z-index: 10;
 }
 
@@ -873,8 +874,29 @@ input[type=range]:focus {
     flex: 1;
 }
 
-#expert-next-btn {
-    white-space: nowrap;
-    padding: 0.8rem 1.5rem;
+.expert-nav-btn {
+    position: absolute;
+    right: max(1.5rem, env(safe-area-inset-right));
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 20;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background-color: var(--primary-color);
+    color: #fff;
+    border: none;
+    box-shadow: 0 4px 14px rgba(59, 130, 246, 0.4);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: transform 0.2s, background-color 0.2s;
+}
+.expert-nav-btn:active {
+    transform: translateY(-50%) scale(0.95);
+}
+.expert-nav-btn:hover {
+    background-color: var(--primary-hover);
 }
 
