@@ -853,25 +853,31 @@ input[type=range]:focus {
 
 #expert-subtitle-container {
     position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    padding: 2rem 5rem max(2.5rem, env(safe-area-inset-bottom)) 2rem; /* Extra padding for safe areas and next button */
-    background: linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0.7) 60%, transparent 100%);
+    bottom: max(6%, 24px); /* Safely away from the bottom edge */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 75%; /* Leaves plenty of room on the right for the next button */
+    max-width: 900px;
+    background: rgba(0, 0, 0, 0.75); /* Netflix-style pill background */
+    padding: 0.8rem 1.5rem;
+    border-radius: 12px;
     display: flex;
-    align-items: flex-end;
-    justify-content: flex-start;
+    align-items: center;
+    justify-content: center;
     z-index: 10;
+    pointer-events: none; /* Ensures it doesn't block screen interactions */
+    backdrop-filter: blur(4px);
 }
 
 #expert-text {
     color: #fff;
     font-family: 'Lato', sans-serif;
-    font-size: clamp(1.1rem, 3vw, 1.5rem);
-    font-weight: 400;
-    line-height: 1.5;
-    text-shadow: 0 2px 6px rgba(0,0,0,0.8);
-    flex: 1;
+    font-size: clamp(0.9rem, 2.5vh, 1.15rem); /* Smaller font, scales with height in landscape */
+    font-weight: 500;
+    line-height: 1.4;
+    text-align: center;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.9);
+    margin: 0;
 }
 
 .expert-nav-btn {
